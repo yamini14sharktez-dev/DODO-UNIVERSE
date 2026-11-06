@@ -1,0 +1,60 @@
+# Environment and Secrets
+*.env
+*.env.*
+!.env.example
+.env
+.env.development
+.env.staging
+.env.production
+passwords.yaml
+config/passwords.yaml
+firebase_service_account_key.json
+config/firebase_service_account_key.json
+secrets.json
+
+# Files and directories created by pub / Dart / Flutter
+.dart_tool/
+.packages
+.pub-cache/
+.pub/
+pubspec_overrides.yaml
+build/
+
+# Serverpod
+.serverpod/
+.scloud/
+**/sp_*.db*
+web/app/
+
+# IDE & Editor files
+.idea/
+.vscode/*
+!.vscode/settings.json
+!.vscode/tasks.json
+!.vscode/launch.json
+!.vscode/extensions.json
+*.iml
+*.iws
+*.ipr
+.project
+.classpath
+.settings/
+
+# Agent and MCP files
+.dart_skills/
+.agents/
+.claude/
+.gemini/
+.cursor/
+.vscode/mcp.json
+.codex/
+.mcp.json
+
+# OS generated files
+.DS_Store
+.DS_Store?
+._*
+.Spotlight-V100
+.Trashes
+ehthumbs.db
+Thumbs.db

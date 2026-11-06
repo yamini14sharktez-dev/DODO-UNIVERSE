@@ -1,0 +1,44 @@
+services:
+  # Development services
+  postgres:
+    image: ghcr.io/serverpod/postgres:16
+    ports:
+      - "8090:5432"
+    environment:
+      POSTGRES_USER: postgres
+      POSTGRES_DB: dodo_universe
+      POSTGRES_PASSWORD: "vToN-2e6T7Q_dNWQdJoJxDGPBLur8xqb"
+    volumes:
+      - dodo_universe_data:/var/lib/postgresql/data
+
+  redis:
+    image: redis:6.2.6
+    ports:
+      - "8091:6379"
+    command: redis-server --requirepass "XEDEk24dKF3HG82V6zl4PM1Z9VCJC1Dd"
+    environment:
+      - REDIS_REPLICATION_MODE=master
+
+  # Test services
+  postgres_test:
+    image: ghcr.io/serverpod/postgres:16
+    ports:
+      - "9090:5432"
+    environment:
+      POSTGRES_USER: postgres
+      POSTGRES_DB: dodo_universe_test
+      POSTGRES_PASSWORD: "tlz-5wjGtQzQQsgGwPMXc7Tsqt6VxJuG"
+    volumes:
+      - dodo_universe_test_data:/var/lib/postgresql/data
+
+  redis_test:
+    image: redis:6.2.6
+    ports:
+      - "9091:6379"
+    command: redis-server --requirepass "e_73SiCzBakYTaz4zkZSJbaEAYQJs3Ps"
+    environment:
+      - REDIS_REPLICATION_MODE=master
+
+volumes:
+  dodo_universe_data:
+  dodo_universe_test_data:
