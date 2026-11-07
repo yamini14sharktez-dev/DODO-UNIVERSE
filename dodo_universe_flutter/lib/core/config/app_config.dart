@@ -7,38 +7,52 @@ enum AppEnvironment {
 class AppConfig {
   final AppEnvironment environment;
   final String environmentName;
-  final String backendApiUrl;
+  final String supabaseUrl;
+  final String supabaseAnonKey;
 
   const AppConfig({
     required this.environment,
     required this.environmentName,
-    required this.backendApiUrl,
+    required this.supabaseUrl,
+    required this.supabaseAnonKey,
   });
 
   static const AppConfig development = AppConfig(
     environment: AppEnvironment.development,
     environmentName: 'Development',
-    backendApiUrl: String.fromEnvironment(
-      'SERVER_URL',
-      defaultValue: 'http://localhost:8080/',
+    supabaseUrl: String.fromEnvironment(
+      'SUPABASE_URL',
+      defaultValue: 'https://swivkawtnqymvymjxlpl.supabase.co',
+    ),
+    supabaseAnonKey: String.fromEnvironment(
+      'SUPABASE_ANON_KEY',
+      defaultValue: '',
     ),
   );
 
   static const AppConfig staging = AppConfig(
     environment: AppEnvironment.staging,
     environmentName: 'Staging',
-    backendApiUrl: String.fromEnvironment(
-      'SERVER_URL',
-      defaultValue: 'https://api-staging.dodouniverse.com/',
+    supabaseUrl: String.fromEnvironment(
+      'SUPABASE_URL',
+      defaultValue: 'https://swivkawtnqymvymjxlpl.supabase.co',
+    ),
+    supabaseAnonKey: String.fromEnvironment(
+      'SUPABASE_ANON_KEY',
+      defaultValue: '',
     ),
   );
 
   static const AppConfig production = AppConfig(
     environment: AppEnvironment.production,
     environmentName: 'Production',
-    backendApiUrl: String.fromEnvironment(
-      'SERVER_URL',
-      defaultValue: 'https://api.dodouniverse.com/',
+    supabaseUrl: String.fromEnvironment(
+      'SUPABASE_URL',
+      defaultValue: 'https://swivkawtnqymvymjxlpl.supabase.co',
+    ),
+    supabaseAnonKey: String.fromEnvironment(
+      'SUPABASE_ANON_KEY',
+      defaultValue: '',
     ),
   );
 
@@ -58,4 +72,3 @@ class AppConfig {
     }
   }
 }
-

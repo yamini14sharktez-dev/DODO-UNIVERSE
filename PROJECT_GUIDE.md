@@ -2,88 +2,93 @@
 
 ## 1. Project Architecture
 
-The project follows the official Serverpod three-package structure:
+DODO Universe uses a **Pure Supabase BaaS** architecture backed by a **Flutter** client:
 
 ```
-C:\DODO-Uni\
-├── dodo_universe_flutter/    # Flutter application (Frontend)
+DODO-Uni/
+├── dodo_universe_flutter/     # Flutter client application
 │   ├── lib/
-│   │   ├── core/config/      # Multi-environment configuration (Dev, Staging, Prod)
-│   │   ├── screens/          # UI views & feature screens
-│   │   ├── client.dart       # Serverpod client initialization
-│   │   └── main.dart         # Flutter entry point
+│   │   ├── core/
+│   │   │   ├── config/        # Environment configurations (AppConfig)
+│   │   │   └── supabase/      # SupabaseManager singleton & initialization
+│   │   ├── screens/           # UI screens (including Phase0Screen verification)
+│   │   └── main.dart          # App entry point
 │   └── pubspec.yaml
-├── dodo_universe_server/     # Dart Serverpod Backend
-│   ├── bin/main.dart         # Backend entry point
-│   ├── config/               # Server & database environment configs
-│   │   ├── development.yaml
-│   │   ├── staging.yaml
-│   │   ├── production.yaml
-│   │   └── passwords.yaml    # Secret credentials (GIT-IGNORED)
-│   ├── lib/src/endpoints/    # Serverpod API endpoints
-│   └── pubspec.yaml
-└── dodo_universe_client/     # Generated API client & serialization protocols
-    └── lib/
+└── supabase/                  # Supabase configurations & backend logic
+    ├── config.toml            # Project CLI configuration (Project ID: swivkawtnqymvymjxlpl)
+    ├── migrations/            # SQL migration scripts
+    └── functions/             # Supabase Edge Functions (Deno / TypeScript)
 ```
 
-## 2. Environment Configuration Strategy
+---
 
-### Backend Configuration (`dodo_universe_server/config/`)
-Serverpod uses YAML configurations selected at startup via the `--mode` flag:
-- `development.yaml` (Mode: `development`)
-- `staging.yaml` (Mode: `staging`)
-- `production.yaml` (Mode: `production`)
+## 2. Supabase Services & Foundation
 
-Sensitive values (such as database passwords and service keys) are kept in `config/passwords.yaml` or provided via environment variables (`SERVERPOD_PASSWORDS`). **`config/passwords.yaml` is strictly ignored by Git.**
+- **Project ID**: `swivkawtnqymvymjxlpl`
+- **Region**: `ap-south-1` (Mumbai)
+- **Project URL**: `https://swivkawtnqymvymjxlpl.supabase.co`
+- **Database Engine**: PostgreSQL 17 (Managed by Supabase)
 
-### Frontend Configuration (`dodo_universe_flutter/lib/core/config/`)
-The Flutter client accesses the backend API exclusively through the Serverpod generated client. Flutter never connects directly to PostgreSQL and never possesses database credentials or Supabase service-role keys.
+### Core BaaS Components
+1. **Supabase Auth**: Manages user registration, sign-in, JWT session lifecycle, password resets, and OAuth providers.
+2. **PostgreSQL & Row Level Security (RLS)**: Direct data access via Supabase's auto-generated PostgREST APIs. All tables must enforce RLS policies to restrict read/write operations by user identity (`auth.uid()`).
+3. **Supabase Storage**: Secure bucket storage for user uploads, media, and assets, protected with storage RLS policies.
+4. **Supabase Edge Functions**: Serverless TypeScript/Deno functions deployed to Supabase for secure server-side logic (e.g. payment webhooks, external API aggregations, admin tasks).
 
-Environment switching is managed via `--dart-define=ENVIRONMENT=development` (or staging/production).
+---
 
-## 3. Supabase PostgreSQL Integration
+## 3. Environment & Configuration Strategy
 
-- **Host & Port**: Supabase provides either a direct host (port 5432) or a session pooler host (port 5432 / 6543). For networks without native IPv6 routing, the **Session Pooler** (IPv4 compatible) is recommended.
-- **SSL**: `requireSsl: true` is strictly enforced for all Supabase connections.
-- **Connection Limits**: Managed inside `config/development.yaml` to prevent pool exhaustion.
+### Frontend (`dodo_universe_flutter/lib/core/config/app_config.dart`)
+Configuration is maintained via `AppConfig` supporting three environments:
+- `Development`
+- `Staging`
+- `Production`
 
-## 4. Development Workflow & Commands
-
-### Code Generation
-Whenever you add or modify an endpoint or a `.spy.yaml` model in `dodo_universe_server`:
+Runtime variables are passed at build or run time using `--dart-define`:
 ```powershell
-cd dodo_universe_server
-serverpod generate
+flutter run --dart-define=ENVIRONMENT=development --dart-define=SUPABASE_ANON_KEY=your_publishable_anon_key
 ```
 
-### Database Migrations
-To create and apply migrations with Serverpod:
-```powershell
-cd dodo_universe_server
-serverpod create-migration
-dart bin/main.dart --apply-migrations --mode development
-```
+### Security Isolation Rules
+- **NEVER** place the Supabase `service_role` key into Flutter.
+- **NEVER** expose the database password in mobile code or version control.
+- **ALWAYS** use the public `anon` (publishable) key for Flutter client operations.
+- **ALWAYS** enforce Row Level Security on every table created in PostgreSQL.
 
-### Running Backend
-```powershell
-cd dodo_universe_server
-dart bin/main.dart --mode development
-```
+---
 
-### Running Flutter App
+## 4. Development & Testing Commands
+
+### Dependency Resolution
 ```powershell
 cd dodo_universe_flutter
-flutter run -d chrome
-# Or targeting Windows desktop:
-flutter run -d windows
-# Or targeting Android emulator:
-flutter run -d emulator-5554
+flutter pub get
 ```
 
-## 5. Security Principles
+### Static Analysis
+```powershell
+cd dodo_universe_flutter
+flutter analyze
+```
 
-1. **Backend-Only Database Access**: PostgreSQL is only queried by the Serverpod server.
-2. **Zero Client Secrets**: No DB passwords, JWT secret keys, or service-role tokens in the Flutter app.
-3. **SSL/TLS Everywhere**: Enforced database SSL and HTTPS for staging/production API endpoints.
-4. **Git Hygiene**: Credentials, `.env`, and `passwords.yaml` are barred from commits.
+### Running Tests
+```powershell
+cd dodo_universe_flutter
+flutter test
+```
 
+### Building Android APK
+```powershell
+cd dodo_universe_flutter
+flutter build apk --debug
+```
+
+### Running the App
+```powershell
+cd dodo_universe_flutter
+# Chrome (Web)
+flutter run -d chrome
+# Android
+flutter run -d android
+```

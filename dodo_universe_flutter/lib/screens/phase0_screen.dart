@@ -1,7 +1,6 @@
 import 'package:flutter/material.dart';
-
-import '../client.dart';
 import '../core/config/app_config.dart';
+import '../core/supabase/supabase_client.dart';
 
 class Phase0Screen extends StatefulWidget {
   const Phase0Screen({super.key});
@@ -11,60 +10,58 @@ class Phase0Screen extends StatefulWidget {
 }
 
 class _Phase0ScreenState extends State<Phase0Screen> {
-  String? _apiMessage;
-  String? _apiError;
-  bool _isApiLoading = false;
-
-  String? _dbMessage;
-  String? _dbError;
-  bool _isDbLoading = false;
+  bool _isCheckingDb = false;
+  String? _dbStatus;
+  bool _dbVerified = false;
 
   @override
   void initState() {
     super.initState();
-    _fetchWelcomeMessage();
   }
 
-  Future<void> _fetchWelcomeMessage() async {
-    setState(() {
-      _isApiLoading = true;
-      _apiError = null;
-    });
-
-    try {
-      final message = await client.welcome.getWelcomeMessage();
+  Future<void> _testDatabaseApi() async {
+    if (!SupabaseManager.isInitialized) {
       setState(() {
-        _apiMessage = message;
+        _dbStatus = 'Cannot test database: Supabase client is not initialized. Anon Key is required.';
+        _dbVerified = false;
       });
-    } catch (e) {
-      setState(() {
-        _apiError = e.toString();
-      });
-    } finally {
-      setState(() {
-        _isApiLoading = false;
-      });
+      return;
     }
-  }
 
-  Future<void> _checkDatabaseConnectivity() async {
     setState(() {
-      _isDbLoading = true;
-      _dbError = null;
+      _isCheckingDb = true;
+      _dbStatus = null;
     });
 
     try {
-      final status = await client.welcome.checkDatabase();
+      // Execute an actual database API query to verify PostgREST/PostgreSQL connectivity
+      final response = await SupabaseManager.client
+          .from('_phase0_test')
+          .select()
+          .limit(1)
+          .maybeSingle();
+
       setState(() {
-        _dbMessage = status;
+        _dbVerified = true;
+        _dbStatus = 'Database API request succeeded! Response: $response';
       });
     } catch (e) {
-      setState(() {
-        _dbError = e.toString();
-      });
+      final errorString = e.toString();
+      // If table does not exist (PGRST204 or 42P01), the connection to Supabase PostgREST still succeeded
+      if (errorString.contains('42P01') || errorString.contains('PGRST204') || errorString.contains('relation') || errorString.contains('does not exist')) {
+        setState(() {
+          _dbVerified = true;
+          _dbStatus = 'Database API connection verified! PostgREST responded (no business tables created yet, as expected).';
+        });
+      } else {
+        setState(() {
+          _dbVerified = false;
+          _dbStatus = 'Database API request failed: $errorString';
+        });
+      }
     } finally {
       setState(() {
-        _isDbLoading = false;
+        _isCheckingDb = false;
       });
     }
   }
@@ -73,17 +70,19 @@ class _Phase0ScreenState extends State<Phase0Screen> {
   Widget build(BuildContext context) {
     final theme = Theme.of(context);
     final config = AppConfig.current();
+    final isClientInitialized = SupabaseManager.isInitialized;
+    final isAnonKeyConfigured = config.supabaseAnonKey.isNotEmpty;
 
     return Scaffold(
       appBar: AppBar(
-        title: const Text('DODO Universe – Phase 0 Verification'),
+        title: const Text('DODO Universe – Phase 0 (Supabase BaaS)'),
         centerTitle: true,
       ),
       body: SingleChildScrollView(
         padding: const EdgeInsets.all(24),
         child: Center(
           child: ConstrainedBox(
-            constraints: const BoxConstraints(maxWidth: 680),
+            constraints: const BoxConstraints(maxWidth: 720),
             child: Column(
               crossAxisAlignment: CrossAxisAlignment.stretch,
               children: [
@@ -96,88 +95,72 @@ class _Phase0ScreenState extends State<Phase0Screen> {
                       crossAxisAlignment: CrossAxisAlignment.start,
                       children: [
                         Text(
-                          'Environment Information',
+                          'Environment & Supabase Configuration',
                           style: theme.textTheme.titleMedium?.copyWith(
                             fontWeight: FontWeight.bold,
                           ),
                         ),
                         const SizedBox(height: 8),
-                        Text('Target Environment: ${config.environmentName}'),
-                        Text('Backend Endpoint: ${config.backendApiUrl}'),
-                      ],
-                    ),
-                  ),
-                ),
-                const SizedBox(height: 20),
-
-                // API Communication Card
-                Card(
-                  elevation: 2,
-                  child: Padding(
-                    padding: const EdgeInsets.all(16),
-                    child: Column(
-                      crossAxisAlignment: CrossAxisAlignment.start,
-                      children: [
-                        Row(
-                          mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                          children: [
-                            Text(
-                              '1. API Communication',
-                              style: theme.textTheme.titleMedium?.copyWith(
-                                fontWeight: FontWeight.bold,
-                              ),
-                            ),
-                            IconButton(
-                              icon: const Icon(Icons.refresh),
-                              onPressed: _isApiLoading ? null : _fetchWelcomeMessage,
-                              tooltip: 'Refresh API Message',
-                            ),
-                          ],
-                        ),
-                        const SizedBox(height: 8),
-                        if (_isApiLoading)
-                          const Center(
-                            child: Padding(
-                              padding: EdgeInsets.all(12),
-                              child: CircularProgressIndicator(),
-                            ),
-                          )
-                        else if (_apiError != null)
-                          Container(
-                            padding: const EdgeInsets.all(12),
-                            decoration: BoxDecoration(
-                              color: theme.colorScheme.errorContainer,
-                              borderRadius: BorderRadius.circular(8),
-                            ),
-                            child: Text(
-                              'Error: $_apiError',
-                              style: TextStyle(
-                                color: theme.colorScheme.onErrorContainer,
-                              ),
-                            ),
-                          )
-                        else
-                          Container(
-                            padding: const EdgeInsets.all(12),
-                            decoration: BoxDecoration(
-                              color: theme.colorScheme.primaryContainer,
-                              borderRadius: BorderRadius.circular(8),
-                            ),
-                            child: Text(
-                              _apiMessage ?? 'No message received.',
-                              style: TextStyle(
-                                color: theme.colorScheme.onPrimaryContainer,
-                                fontWeight: FontWeight.w600,
-                              ),
-                            ),
+                        Text('Environment: ${config.environmentName}'),
+                        Text('Project URL: ${config.supabaseUrl}'),
+                        Text(
+                          'Publishable/Anon Key: ${isAnonKeyConfigured ? "Configured (${config.supabaseAnonKey.substring(0, 8)}...)" : "NOT SET (Provide via --dart-define=SUPABASE_ANON_KEY=...)"}',
+                          style: TextStyle(
+                            color: isAnonKeyConfigured ? Colors.green.shade700 : Colors.orange.shade800,
+                            fontWeight: FontWeight.w600,
                           ),
+                        ),
                       ],
                     ),
                   ),
                 ),
-                const SizedBox(height: 20),
+                const SizedBox(height: 16),
 
-                // Database Connectivity Card
+                // 1. Client Initialization Status
+                Card(
+                  elevation: 2,
+                  child: ListTile(
+                    leading: Icon(
+                      isClientInitialized ? Icons.check_circle : Icons.warning_amber_rounded,
+                      color: isClientInitialized ? Colors.green : Colors.orange,
+                      size: 32,
+                    ),
+                    title: const Text(
+                      '1. Supabase Client Initialization',
+                      style: TextStyle(fontWeight: FontWeight.bold),
+                    ),
+                    subtitle: Text(
+                      isClientInitialized
+                          ? 'INITIALIZED – Client instance is active with project URL.'
+                          : 'NOT INITIALIZED – Provide SUPABASE_ANON_KEY to initialize client.',
+                    ),
+                  ),
+                ),
+                const SizedBox(height: 12),
+
+                // 2. Auth Service Status
+                Card(
+                  elevation: 2,
+                  child: ListTile(
+                    leading: Icon(
+                      isClientInitialized ? Icons.lock_open : Icons.lock_clock,
+                      color: isClientInitialized ? Colors.green : Colors.grey,
+                      size: 32,
+                    ),
+                    title: const Text(
+                      '2. Supabase Auth Service',
+                      style: TextStyle(fontWeight: FontWeight.bold),
+                    ),
+                    subtitle: Text(
+                      isClientInitialized
+                          ? 'READY – Supabase Auth instance is accessible. No active session (unauthenticated).'
+                          : 'STANDBY – Awaiting Supabase client initialization.',
+                    ),
+                  ),
+                ),
+                const SizedBox(height: 12),
+
+                // 3. Database API Verification
                 Card(
                   elevation: 2,
                   child: Padding(
@@ -188,58 +171,49 @@ class _Phase0ScreenState extends State<Phase0Screen> {
                         Row(
                           mainAxisAlignment: MainAxisAlignment.spaceBetween,
                           children: [
-                            Text(
-                              '2. Supabase PostgreSQL Connectivity',
-                              style: theme.textTheme.titleMedium?.copyWith(
-                                fontWeight: FontWeight.bold,
+                            const Expanded(
+                              child: Text(
+                                '3. Supabase Database API Verification',
+                                style: TextStyle(fontWeight: FontWeight.bold, fontSize: 16),
                               ),
                             ),
                             ElevatedButton.icon(
-                              icon: const Icon(Icons.storage),
-                              label: const Text('Test Database'),
-                              onPressed: _isDbLoading ? null : _checkDatabaseConnectivity,
+                              icon: const Icon(Icons.cloud_sync),
+                              label: const Text('Verify DB API'),
+                              onPressed: _isCheckingDb ? null : _testDatabaseApi,
                             ),
                           ],
                         ),
                         const SizedBox(height: 12),
-                        if (_isDbLoading)
+                        if (_isCheckingDb)
                           const Center(
                             child: Padding(
                               padding: EdgeInsets.all(12),
                               child: CircularProgressIndicator(),
                             ),
                           )
-                        else if (_dbError != null)
+                        else if (_dbStatus != null)
                           Container(
                             padding: const EdgeInsets.all(12),
                             decoration: BoxDecoration(
-                              color: theme.colorScheme.errorContainer,
+                              color: _dbVerified
+                                  ? theme.colorScheme.secondaryContainer
+                                  : theme.colorScheme.errorContainer,
                               borderRadius: BorderRadius.circular(8),
                             ),
                             child: Text(
-                              'Database Error: $_dbError',
+                              _dbStatus!,
                               style: TextStyle(
-                                color: theme.colorScheme.onErrorContainer,
-                              ),
-                            ),
-                          )
-                        else if (_dbMessage != null)
-                          Container(
-                            padding: const EdgeInsets.all(12),
-                            decoration: BoxDecoration(
-                              color: theme.colorScheme.secondaryContainer,
-                              borderRadius: BorderRadius.circular(8),
-                            ),
-                            child: Text(
-                              _dbMessage!,
-                              style: TextStyle(
-                                color: theme.colorScheme.onSecondaryContainer,
+                                color: _dbVerified
+                                    ? theme.colorScheme.onSecondaryContainer
+                                    : theme.colorScheme.onErrorContainer,
+                                fontWeight: FontWeight.w600,
                               ),
                             ),
                           )
                         else
                           const Text(
-                            'Click "Test Database" to verify the backend-to-Supabase PostgreSQL connection separately from API calls.',
+                            'Click "Verify DB API" to execute a live PostgREST API request against the Supabase database. Note: Client initialization alone does not mean database connectivity is verified.',
                             style: TextStyle(fontStyle: FontStyle.italic),
                           ),
                       ],
@@ -254,4 +228,3 @@ class _Phase0ScreenState extends State<Phase0Screen> {
     );
   }
 }
-

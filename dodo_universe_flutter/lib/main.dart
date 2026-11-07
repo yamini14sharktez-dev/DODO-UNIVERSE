@@ -1,18 +1,17 @@
 import 'package:flutter/material.dart';
-
-import 'client.dart';
+import 'core/supabase/supabase_client.dart';
 import 'screens/phase0_screen.dart';
 
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
-  await initializeClient();
+  await SupabaseManager.initialize();
   runApp(const DodoUniverseApp());
 }
 
 ThemeData _buildTheme(Brightness brightness) {
   return ThemeData(
     colorScheme: ColorScheme.fromSeed(
-      seedColor: const Color(0xFF6750A4),
+      seedColor: const Color(0xFF1E88E5),
       brightness: brightness,
     ),
     useMaterial3: true,
