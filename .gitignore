@@ -6,6 +6,10 @@
 .env.development
 .env.staging
 .env.production
+env.json
+env.*.json
+!env.example.json
+config.local.json
 passwords.yaml
 config/passwords.yaml
 firebase_service_account_key.json

@@ -7,5 +7,6 @@ void main() {
     expect(config.environment, equals(AppEnvironment.development));
     expect(config.environmentName, equals('Development'));
     expect(config.supabaseUrl, equals('https://swivkawtnqymvymjxlpl.supabase.co'));
+    expect(config.supabasePublishableKey, isNotNull);
   });
 }

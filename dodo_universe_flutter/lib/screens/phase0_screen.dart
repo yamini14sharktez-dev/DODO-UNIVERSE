@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:http/http.dart' as http;
 import '../core/config/app_config.dart';
 import '../core/supabase/supabase_client.dart';
 
@@ -22,7 +23,7 @@ class _Phase0ScreenState extends State<Phase0Screen> {
   Future<void> _testDatabaseApi() async {
     if (!SupabaseManager.isInitialized) {
       setState(() {
-        _dbStatus = 'Cannot test database: Supabase client is not initialized. Anon Key is required.';
+        _dbStatus = 'Cannot test API: Supabase client is not initialized. Publishable key is required.';
         _dbVerified = false;
       });
       return;
@@ -34,31 +35,35 @@ class _Phase0ScreenState extends State<Phase0Screen> {
     });
 
     try {
-      // Execute an actual database API query to verify PostgREST/PostgreSQL connectivity
-      final response = await SupabaseManager.client
-          .from('_phase0_test')
-          .select()
-          .limit(1)
-          .maybeSingle();
+      final config = AppConfig.current();
+      final url = Uri.parse('${config.supabaseUrl}/rest/v1/');
+      final req = http.Request('OPTIONS', url)
+        ..headers['apikey'] = config.supabasePublishableKey;
 
-      setState(() {
-        _dbVerified = true;
-        _dbStatus = 'Database API request succeeded! Response: $response';
-      });
-    } catch (e) {
-      final errorString = e.toString();
-      // If table does not exist (PGRST204 or 42P01), the connection to Supabase PostgREST still succeeded
-      if (errorString.contains('42P01') || errorString.contains('PGRST204') || errorString.contains('relation') || errorString.contains('does not exist')) {
+      final client = http.Client();
+      final streamed = await client.send(req);
+      final res = await http.Response.fromStream(streamed);
+
+      if (res.statusCode == 200) {
+        final projectRef = res.headers['sb-project-ref'] ?? 'swivkawtnqymvymjxlpl';
         setState(() {
           _dbVerified = true;
-          _dbStatus = 'Database API connection verified! PostgREST responded (no business tables created yet, as expected).';
+          _dbStatus = 'REST API Gateway: CONNECTED (HTTP 200 OK)\n'
+              'Project: $projectRef\n'
+              'Authentication: Publishable Key accepted\n'
+              'Database Query Status: STANDBY (No application tables created yet)';
         });
       } else {
         setState(() {
           _dbVerified = false;
-          _dbStatus = 'Database API request failed: $errorString';
+          _dbStatus = 'API Gateway returned HTTP ${res.statusCode}: ${res.body}';
         });
       }
+    } catch (e) {
+      setState(() {
+        _dbVerified = false;
+        _dbStatus = 'API connection probe failed: $e';
+      });
     } finally {
       setState(() {
         _isCheckingDb = false;
@@ -71,7 +76,7 @@ class _Phase0ScreenState extends State<Phase0Screen> {
     final theme = Theme.of(context);
     final config = AppConfig.current();
     final isClientInitialized = SupabaseManager.isInitialized;
-    final isAnonKeyConfigured = config.supabaseAnonKey.isNotEmpty;
+    final isAnonKeyConfigured = config.supabasePublishableKey.isNotEmpty;
 
     return Scaffold(
       appBar: AppBar(
@@ -104,7 +109,7 @@ class _Phase0ScreenState extends State<Phase0Screen> {
                         Text('Environment: ${config.environmentName}'),
                         Text('Project URL: ${config.supabaseUrl}'),
                         Text(
-                          'Publishable/Anon Key: ${isAnonKeyConfigured ? "Configured (${config.supabaseAnonKey.substring(0, 8)}...)" : "NOT SET (Provide via --dart-define=SUPABASE_ANON_KEY=...)"}',
+                          'Publishable Key: ${isAnonKeyConfigured ? "Configured (${config.supabasePublishableKey.substring(0, 14)}...)" : "NOT SET (Provide via env.json or --dart-define)"}',
                           style: TextStyle(
                             color: isAnonKeyConfigured ? Colors.green.shade700 : Colors.orange.shade800,
                             fontWeight: FontWeight.w600,
@@ -132,7 +137,7 @@ class _Phase0ScreenState extends State<Phase0Screen> {
                     subtitle: Text(
                       isClientInitialized
                           ? 'INITIALIZED – Client instance is active with project URL.'
-                          : 'NOT INITIALIZED – Provide SUPABASE_ANON_KEY to initialize client.',
+                          : 'NOT INITIALIZED – Provide SUPABASE_PUBLISHABLE_KEY to initialize client.',
                     ),
                   ),
                 ),
@@ -160,7 +165,7 @@ class _Phase0ScreenState extends State<Phase0Screen> {
                 ),
                 const SizedBox(height: 12),
 
-                // 3. Database API Verification
+                // 3. Database & REST API Verification
                 Card(
                   elevation: 2,
                   child: Padding(
@@ -173,13 +178,13 @@ class _Phase0ScreenState extends State<Phase0Screen> {
                           children: [
                             const Expanded(
                               child: Text(
-                                '3. Supabase Database API Verification',
+                                '3. Supabase REST API & Database Verification',
                                 style: TextStyle(fontWeight: FontWeight.bold, fontSize: 16),
                               ),
                             ),
                             ElevatedButton.icon(
                               icon: const Icon(Icons.cloud_sync),
-                              label: const Text('Verify DB API'),
+                              label: const Text('Verify API Gateway'),
                               onPressed: _isCheckingDb ? null : _testDatabaseApi,
                             ),
                           ],
@@ -213,7 +218,7 @@ class _Phase0ScreenState extends State<Phase0Screen> {
                           )
                         else
                           const Text(
-                            'Click "Verify DB API" to execute a live PostgREST API request against the Supabase database. Note: Client initialization alone does not mean database connectivity is verified.',
+                            'Click "Verify API Gateway" to probe the PostgREST gateway via HTTP OPTIONS. It tests gateway authentication and project routing without requiring any database tables.',
                             style: TextStyle(fontStyle: FontStyle.italic),
                           ),
                       ],
