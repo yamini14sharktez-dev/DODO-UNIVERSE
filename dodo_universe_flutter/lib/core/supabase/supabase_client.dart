@@ -15,12 +15,13 @@ class SupabaseManager {
     return Supabase.instance.client;
   }
 
-  static Future<bool> initialize() async {
-    final config = AppConfig.current();
-    if (config.supabaseUrl.isEmpty || config.supabasePublishableKey.isEmpty) {
+  static Future<bool> initialize({AppConfig? config}) async {
+    final effectiveConfig = config ?? AppConfig.current();
+    if (effectiveConfig.supabaseUrl.isEmpty ||
+        effectiveConfig.supabasePublishableKey.isEmpty) {
       debugPrint(
         'SupabaseManager: Supabase URL or Publishable Key is empty. '
-        'Set via --dart-define=SUPABASE_PUBLISHABLE_KEY=... or --dart-define-from-file=.env.',
+        'Set via --dart-define=SUPABASE_PUBLISHABLE_KEY=... or --dart-define-from-file=env.json.',
       );
       _initialized = false;
       return false;
@@ -28,8 +29,8 @@ class SupabaseManager {
 
     try {
       await Supabase.initialize(
-        url: config.supabaseUrl,
-        publishableKey: config.supabasePublishableKey,
+        url: effectiveConfig.supabaseUrl,
+        publishableKey: effectiveConfig.supabasePublishableKey,
       );
       _initialized = true;
       return true;
@@ -40,4 +41,3 @@ class SupabaseManager {
     }
   }
 }
-

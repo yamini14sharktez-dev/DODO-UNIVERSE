@@ -23,7 +23,8 @@ class _Phase0ScreenState extends State<Phase0Screen> {
   Future<void> _testDatabaseApi() async {
     if (!SupabaseManager.isInitialized) {
       setState(() {
-        _dbStatus = 'Cannot test API: Supabase client is not initialized. Publishable key is required.';
+        _dbStatus =
+            'Cannot test API: Supabase client is not initialized. Publishable key is required.';
         _dbVerified = false;
       });
       return;
@@ -45,7 +46,8 @@ class _Phase0ScreenState extends State<Phase0Screen> {
       final res = await http.Response.fromStream(streamed);
 
       if (res.statusCode == 200) {
-        final projectRef = res.headers['sb-project-ref'] ?? 'swivkawtnqymvymjxlpl';
+        final projectRef =
+            res.headers['sb-project-ref'] ?? 'swivkawtnqymvymjxlpl';
         setState(() {
           _dbVerified = true;
           _dbStatus = 'REST API Gateway: CONNECTED (HTTP 200 OK)\n'
@@ -56,7 +58,8 @@ class _Phase0ScreenState extends State<Phase0Screen> {
       } else {
         setState(() {
           _dbVerified = false;
-          _dbStatus = 'API Gateway returned HTTP ${res.statusCode}: ${res.body}';
+          _dbStatus =
+              'API Gateway returned HTTP ${res.statusCode}: ${res.body}';
         });
       }
     } catch (e) {
@@ -111,7 +114,9 @@ class _Phase0ScreenState extends State<Phase0Screen> {
                         Text(
                           'Publishable Key: ${isAnonKeyConfigured ? "Configured (${config.supabasePublishableKey.substring(0, 14)}...)" : "NOT SET (Provide via env.json or --dart-define)"}',
                           style: TextStyle(
-                            color: isAnonKeyConfigured ? Colors.green.shade700 : Colors.orange.shade800,
+                            color: isAnonKeyConfigured
+                                ? Colors.green.shade700
+                                : Colors.orange.shade800,
                             fontWeight: FontWeight.w600,
                           ),
                         ),
@@ -126,7 +131,9 @@ class _Phase0ScreenState extends State<Phase0Screen> {
                   elevation: 2,
                   child: ListTile(
                     leading: Icon(
-                      isClientInitialized ? Icons.check_circle : Icons.warning_amber_rounded,
+                      isClientInitialized
+                          ? Icons.check_circle
+                          : Icons.warning_amber_rounded,
                       color: isClientInitialized ? Colors.green : Colors.orange,
                       size: 32,
                     ),
@@ -179,13 +186,15 @@ class _Phase0ScreenState extends State<Phase0Screen> {
                             const Expanded(
                               child: Text(
                                 '3. Supabase REST API & Database Verification',
-                                style: TextStyle(fontWeight: FontWeight.bold, fontSize: 16),
+                                style: TextStyle(
+                                    fontWeight: FontWeight.bold, fontSize: 16),
                               ),
                             ),
                             ElevatedButton.icon(
                               icon: const Icon(Icons.cloud_sync),
                               label: const Text('Verify API Gateway'),
-                              onPressed: _isCheckingDb ? null : _testDatabaseApi,
+                              onPressed:
+                                  _isCheckingDb ? null : _testDatabaseApi,
                             ),
                           ],
                         ),
