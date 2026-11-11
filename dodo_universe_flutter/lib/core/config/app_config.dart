@@ -29,7 +29,8 @@ class AppConfig {
     ),
     supabasePublishableKey: String.fromEnvironment(
       'SUPABASE_PUBLISHABLE_KEY',
-      defaultValue: String.fromEnvironment('SUPABASE_ANON_KEY', defaultValue: ''),
+      defaultValue:
+          String.fromEnvironment('SUPABASE_ANON_KEY', defaultValue: ''),
     ),
   );
 
@@ -42,7 +43,8 @@ class AppConfig {
     ),
     supabasePublishableKey: String.fromEnvironment(
       'SUPABASE_PUBLISHABLE_KEY',
-      defaultValue: String.fromEnvironment('SUPABASE_ANON_KEY', defaultValue: ''),
+      defaultValue:
+          String.fromEnvironment('SUPABASE_ANON_KEY', defaultValue: ''),
     ),
   );
 
@@ -55,12 +57,14 @@ class AppConfig {
     ),
     supabasePublishableKey: String.fromEnvironment(
       'SUPABASE_PUBLISHABLE_KEY',
-      defaultValue: String.fromEnvironment('SUPABASE_ANON_KEY', defaultValue: ''),
+      defaultValue:
+          String.fromEnvironment('SUPABASE_ANON_KEY', defaultValue: ''),
     ),
   );
 
   static AppConfig current() {
-    const envString = String.fromEnvironment('ENVIRONMENT', defaultValue: 'development');
+    const envString =
+        String.fromEnvironment('ENVIRONMENT', defaultValue: 'development');
     switch (envString.toLowerCase()) {
       case 'production':
       case 'prod':
