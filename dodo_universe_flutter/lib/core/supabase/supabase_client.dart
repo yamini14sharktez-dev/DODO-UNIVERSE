@@ -16,6 +16,7 @@ class SupabaseManager {
   }
 
   static Future<bool> initialize({AppConfig? config}) async {
+    if (_initialized) return true;
     final effectiveConfig = config ?? AppConfig.current();
     if (effectiveConfig.supabaseUrl.isEmpty ||
         effectiveConfig.supabasePublishableKey.isEmpty) {

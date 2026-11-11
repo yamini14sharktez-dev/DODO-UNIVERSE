@@ -1,10 +1,14 @@
 import 'package:flutter/material.dart';
 import 'package:http/http.dart' as http;
+import '../core/auth/auth_service.dart';
 import '../core/config/app_config.dart';
 import '../core/supabase/supabase_client.dart';
+import 'auth/auth_gate.dart';
 
 class Phase0Screen extends StatefulWidget {
-  const Phase0Screen({super.key});
+  final IAuthService? authService;
+
+  const Phase0Screen({super.key, this.authService});
 
   @override
   State<Phase0Screen> createState() => _Phase0ScreenState();
@@ -68,9 +72,29 @@ class _Phase0ScreenState extends State<Phase0Screen> {
         _dbStatus = 'API connection probe failed: $e';
       });
     } finally {
-      setState(() {
-        _isCheckingDb = false;
-      });
+      if (mounted) {
+        setState(() {
+          _isCheckingDb = false;
+        });
+      }
+    }
+  }
+
+  Future<void> _handleLogout() async {
+    final auth = widget.authService ?? AuthService.instance;
+    try {
+      await auth.signOut();
+    } catch (e) {
+      debugPrint('Phase0Screen logout error: $e');
+    }
+    if (mounted) {
+      Navigator.pushAndRemoveUntil(
+        context,
+        MaterialPageRoute(
+          builder: (context) => AuthGate(authService: widget.authService),
+        ),
+        (route) => false,
+      );
     }
   }
 
@@ -80,11 +104,21 @@ class _Phase0ScreenState extends State<Phase0Screen> {
     final config = AppConfig.current();
     final isClientInitialized = SupabaseManager.isInitialized;
     final isAnonKeyConfigured = config.supabasePublishableKey.isNotEmpty;
+    final auth = widget.authService ?? AuthService.instance;
+    final currentUser = auth.currentUser;
 
     return Scaffold(
       appBar: AppBar(
         title: const Text('DODO Universe – Phase 0 (Supabase BaaS)'),
         centerTitle: true,
+        actions: [
+          IconButton(
+            key: const Key('phase0_logout_button'),
+            icon: const Icon(Icons.logout_rounded),
+            tooltip: 'Logout',
+            onPressed: _handleLogout,
+          ),
+        ],
       ),
       body: SingleChildScrollView(
         padding: const EdgeInsets.all(24),
@@ -155,8 +189,14 @@ class _Phase0ScreenState extends State<Phase0Screen> {
                   elevation: 2,
                   child: ListTile(
                     leading: Icon(
-                      isClientInitialized ? Icons.lock_open : Icons.lock_clock,
-                      color: isClientInitialized ? Colors.green : Colors.grey,
+                      currentUser != null
+                          ? Icons.check_circle
+                          : (isClientInitialized
+                              ? Icons.lock_open
+                              : Icons.lock_clock),
+                      color: currentUser != null
+                          ? Colors.green
+                          : (isClientInitialized ? Colors.green : Colors.grey),
                       size: 32,
                     ),
                     title: const Text(
@@ -164,10 +204,19 @@ class _Phase0ScreenState extends State<Phase0Screen> {
                       style: TextStyle(fontWeight: FontWeight.bold),
                     ),
                     subtitle: Text(
-                      isClientInitialized
-                          ? 'READY – Supabase Auth instance is accessible. No active session (unauthenticated).'
-                          : 'STANDBY – Awaiting Supabase client initialization.',
+                      currentUser != null
+                          ? 'AUTHENTICATED – User: ${currentUser.phone ?? currentUser.email ?? currentUser.id}\nStatus: Completed Registration.'
+                          : (isClientInitialized
+                              ? 'READY – Supabase Auth instance is accessible. No active session (unauthenticated).'
+                              : 'STANDBY – Awaiting Supabase client initialization.'),
                     ),
+                    trailing: currentUser != null
+                        ? TextButton(
+                            key: const Key('auth_card_logout_button'),
+                            onPressed: _handleLogout,
+                            child: const Text('Logout'),
+                          )
+                        : null,
                   ),
                 ),
                 const SizedBox(height: 12),
@@ -191,6 +240,9 @@ class _Phase0ScreenState extends State<Phase0Screen> {
                               ),
                             ),
                             ElevatedButton.icon(
+                              style: ElevatedButton.styleFrom(
+                                minimumSize: const Size(140, 40),
+                              ),
                               icon: const Icon(Icons.cloud_sync),
                               label: const Text('Verify API Gateway'),
                               onPressed:

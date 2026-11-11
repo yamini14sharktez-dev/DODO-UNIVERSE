@@ -28,3 +28,6 @@ enable_signup = true
 enabled = true
 file_size_limit = "50MiB"
 
+
+[functions.dev-auth]
+verify_jwt = false
