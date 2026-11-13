@@ -91,8 +91,7 @@ class _VerifyMobileScreenState extends State<VerifyMobileScreen> {
           Navigator.pushAndRemoveUntil(
             context,
             MaterialPageRoute(
-              builder: (context) =>
-                  HomeScreen(authService: widget.authService),
+              builder: (context) => HomeScreen(authService: widget.authService),
             ),
             (route) => false,
           );
