@@ -10,7 +10,7 @@ import 'package:dodo_universe/screens/auth/auth_gate.dart';
 import 'package:dodo_universe/screens/auth/registration_success_screen.dart';
 import 'package:dodo_universe/screens/auth/verify_email_screen.dart';
 import 'package:dodo_universe/screens/auth/welcome_screen.dart';
-import 'package:dodo_universe/screens/phase0_screen.dart';
+import 'package:dodo_universe/screens/home_screen.dart';
 
 class GateTestMockAuth implements IAuthService {
   User? _currentUser;
@@ -181,11 +181,10 @@ void main() {
       expect(find.byType(WelcomeScreen), findsOneWidget);
       expect(find.text('DODO Universe'), findsOneWidget);
       expect(find.text('Create Account'), findsOneWidget);
-      expect(find.byType(Phase0Screen), findsNothing);
+      expect(find.byType(HomeScreen), findsNothing);
     });
 
-    testWidgets(
-        '2. App startup with valid completed session shows Phase0Screen',
+    testWidgets('2. App startup with valid completed session shows HomeScreen',
         (tester) async {
       final completedUser = createTestUser();
       final mockAuth = GateTestMockAuth(
@@ -196,7 +195,7 @@ void main() {
       await tester.pumpWidget(DodoUniverseApp(authService: mockAuth));
       await tester.pumpAndSettle();
 
-      expect(find.byType(Phase0Screen), findsOneWidget);
+      expect(find.byType(HomeScreen), findsOneWidget);
       expect(find.byType(WelcomeScreen), findsNothing);
     });
 
@@ -216,7 +215,7 @@ void main() {
       await tester.pumpAndSettle();
 
       expect(find.byType(VerifyEmailScreen), findsOneWidget);
-      expect(find.byType(Phase0Screen), findsNothing);
+      expect(find.byType(HomeScreen), findsNothing);
       expect(find.byType(WelcomeScreen), findsNothing);
     });
 
@@ -247,11 +246,11 @@ void main() {
       await tester.pumpAndSettle();
 
       // Settled frame displays resolved destination
-      expect(find.byType(Phase0Screen), findsOneWidget);
+      expect(find.byType(HomeScreen), findsOneWidget);
     });
 
     testWidgets(
-        '5. Logout from Phase0Screen signs out and returns to WelcomeScreen',
+        '5. Logout from HomeScreen signs out and returns to WelcomeScreen',
         (tester) async {
       final completedUser = createTestUser();
       final mockAuth = GateTestMockAuth(
@@ -264,9 +263,9 @@ void main() {
       ));
       await tester.pumpAndSettle();
 
-      expect(find.byType(Phase0Screen), findsOneWidget);
+      expect(find.byType(HomeScreen), findsOneWidget);
 
-      // Tap logout button in Phase0Screen AppBar
+      // Tap logout button in HomeScreen AppBar
       final logoutBtn = find.byKey(const Key('phase0_logout_button'));
       expect(logoutBtn, findsOneWidget);
       await tester.tap(logoutBtn);
@@ -274,7 +273,7 @@ void main() {
 
       expect(mockAuth.signOutCalled, isTrue);
       expect(find.byType(WelcomeScreen), findsOneWidget);
-      expect(find.byType(Phase0Screen), findsNothing);
+      expect(find.byType(HomeScreen), findsNothing);
     });
 
     testWidgets(
@@ -291,7 +290,7 @@ void main() {
       ));
       await tester.pumpAndSettle();
 
-      expect(find.byType(Phase0Screen), findsOneWidget);
+      expect(find.byType(HomeScreen), findsOneWidget);
 
       // Simulate token expiration / refresh failure
       mockAuth.emitAuthState(
@@ -300,10 +299,10 @@ void main() {
       await tester.pumpAndSettle();
 
       expect(find.byType(WelcomeScreen), findsOneWidget);
-      expect(find.byType(Phase0Screen), findsNothing);
+      expect(find.byType(HomeScreen), findsNothing);
     });
 
-    testWidgets('7. Auth state change to signedIn navigates to Phase0Screen',
+    testWidgets('7. Auth state change to signedIn navigates to HomeScreen',
         (tester) async {
       final mockAuth = GateTestMockAuth(initialUser: null);
 
@@ -321,7 +320,7 @@ void main() {
       );
       await tester.pumpAndSettle();
 
-      expect(find.byType(Phase0Screen), findsOneWidget);
+      expect(find.byType(HomeScreen), findsOneWidget);
     });
 
     testWidgets(
@@ -410,13 +409,13 @@ void main() {
       ));
       await tester.pumpAndSettle();
 
-      // Must NOT route to Phase0Screen; must route to VerifyEmailScreen
-      expect(find.byType(Phase0Screen), findsNothing);
+      // Must NOT route to HomeScreen; must route to VerifyEmailScreen
+      expect(find.byType(HomeScreen), findsNothing);
       expect(find.byType(VerifyEmailScreen), findsOneWidget);
     });
 
     testWidgets(
-        '12. AuthGate with trusted completion status true routes to Phase0Screen',
+        '12. AuthGate with trusted completion status true routes to HomeScreen',
         (tester) async {
       final user = createTestUser();
       final mockAuth = GateTestMockAuth(
@@ -430,7 +429,7 @@ void main() {
       ));
       await tester.pumpAndSettle();
 
-      expect(find.byType(Phase0Screen), findsOneWidget);
+      expect(find.byType(HomeScreen), findsOneWidget);
       expect(find.byType(VerifyEmailScreen), findsNothing);
     });
 
@@ -449,8 +448,8 @@ void main() {
       ));
       await tester.pumpAndSettle();
 
-      // Must display safe error screen, never Phase0Screen
-      expect(find.byType(Phase0Screen), findsNothing);
+      // Must display safe error screen, never HomeScreen
+      expect(find.byType(HomeScreen), findsNothing);
       expect(find.text('Connection Error'), findsOneWidget);
       expect(find.byKey(const Key('auth_gate_retry_button')), findsOneWidget);
 
@@ -459,11 +458,11 @@ void main() {
       await tester.tap(find.byKey(const Key('auth_gate_retry_button')));
       await tester.pumpAndSettle();
 
-      // Resolves to Phase0Screen safely
-      expect(find.byType(Phase0Screen), findsOneWidget);
+      // Resolves to HomeScreen safely
+      expect(find.byType(HomeScreen), findsOneWidget);
     });
 
-    testWidgets('14. Missing profile record prevents access to Phase0Screen',
+    testWidgets('14. Missing profile record prevents access to HomeScreen',
         (tester) async {
       final user = createTestUser();
       final mockAuth = GateTestMockAuth(
@@ -477,8 +476,8 @@ void main() {
       ));
       await tester.pumpAndSettle();
 
-      // Must NOT show Phase0Screen
-      expect(find.byType(Phase0Screen), findsNothing);
+      // Must NOT show HomeScreen
+      expect(find.byType(HomeScreen), findsNothing);
       expect(find.byType(VerifyEmailScreen), findsOneWidget);
     });
   });

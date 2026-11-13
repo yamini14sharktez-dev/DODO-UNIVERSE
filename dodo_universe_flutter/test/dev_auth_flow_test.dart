@@ -12,7 +12,7 @@ import 'package:dodo_universe/screens/auth/registration_success_screen.dart';
 import 'package:dodo_universe/screens/auth/verify_email_screen.dart';
 import 'package:dodo_universe/screens/auth/verify_mobile_screen.dart';
 import 'package:dodo_universe/screens/auth/welcome_screen.dart';
-import 'package:dodo_universe/screens/phase0_screen.dart';
+import 'package:dodo_universe/screens/home_screen.dart';
 
 void main() {
   setUp(() {
@@ -31,7 +31,7 @@ void main() {
 
   group('Phase 7 – Development OTP & New-User Registration Flow', () {
     testWidgets(
-        '1. Complete end-to-end new-user registration flow reaches Phase0Screen',
+        '1. Complete end-to-end new-user registration flow reaches HomeScreen',
         (tester) async {
       final devAuth = DevAuthService();
 
@@ -103,9 +103,10 @@ void main() {
       await tester.tap(find.byType(PrimaryButton), warnIfMissed: false);
       await tester.pumpAndSettle();
 
-      // Arrives at authenticated Phase0Screen
-      expect(find.byType(Phase0Screen), findsOneWidget);
-      expect(find.textContaining('AUTHENTICATED'), findsOneWidget);
+      // Arrives at authenticated HomeScreen
+      expect(find.byType(HomeScreen), findsOneWidget);
+      expect(find.text('Kavya Patel'), findsWidgets);
+      expect(find.text('Verified University Account'), findsOneWidget);
       expect(devAuth.currentUser, isNotNull);
       expect(devAuth.isRegistrationComplete(), isTrue);
     });
@@ -143,8 +144,8 @@ void main() {
       ));
       await tester.pumpAndSettle();
 
-      // Directly renders Phase0Screen without WelcomeScreen
-      expect(find.byType(Phase0Screen), findsOneWidget);
+      // Directly renders HomeScreen without WelcomeScreen
+      expect(find.byType(HomeScreen), findsOneWidget);
       expect(find.byType(WelcomeScreen), findsNothing);
     });
 
@@ -183,7 +184,7 @@ void main() {
       // AuthGate detects incomplete registration and resumes VerifyEmailScreen
       expect(find.byType(VerifyEmailScreen), findsOneWidget);
       expect(find.byType(WelcomeScreen), findsNothing);
-      expect(find.byType(Phase0Screen), findsNothing);
+      expect(find.byType(HomeScreen), findsNothing);
 
       // User enters dev email OTP to finish registration
       await tester.enterText(
@@ -199,7 +200,7 @@ void main() {
 
   group('Phase 7 – Returning-User Login Flow with Dev OTP', () {
     testWidgets(
-        '4. Registered user logs in with dev OTP and reaches Phase0Screen',
+        '4. Registered user logs in with dev OTP and reaches HomeScreen',
         (tester) async {
       final devAuth = DevAuthService();
 
@@ -256,8 +257,8 @@ void main() {
       await tester.tap(find.byType(PrimaryButton), warnIfMissed: false);
       await tester.pumpAndSettle();
 
-      // Successfully reaches Phase0Screen
-      expect(find.byType(Phase0Screen), findsOneWidget);
+      // Successfully reaches HomeScreen
+      expect(find.byType(HomeScreen), findsOneWidget);
       expect(devAuth.currentUser, isNotNull);
       expect(devAuth.currentUser!.phone, equals('+919876543210'));
     });
@@ -332,7 +333,7 @@ void main() {
       await tester.pumpAndSettle();
 
       // Remains on VerifyMobileScreen and displays error
-      expect(find.byType(Phase0Screen), findsNothing);
+      expect(find.byType(HomeScreen), findsNothing);
       expect(
         find.text('Invalid or expired OTP. Please try again.'),
         findsOneWidget,
@@ -362,7 +363,7 @@ void main() {
         find.text('Please enter the complete 6-digit OTP'),
         findsOneWidget,
       );
-      expect(find.byType(Phase0Screen), findsNothing);
+      expect(find.byType(HomeScreen), findsNothing);
     });
   });
 
@@ -469,7 +470,7 @@ void main() {
       expect(resLogin.errorMessage, contains('Network error'));
     });
 
-    testWidgets('12. Logout from Phase0Screen clears session and redirects',
+    testWidgets('12. Logout from HomeScreen clears session and redirects',
         (tester) async {
       final devAuth = DevAuthService();
 
@@ -494,7 +495,7 @@ void main() {
       ));
       await tester.pumpAndSettle();
 
-      expect(find.byType(Phase0Screen), findsOneWidget);
+      expect(find.byType(HomeScreen), findsOneWidget);
 
       // Tap logout
       final logoutBtn = find.byKey(const Key('phase0_logout_button'));
@@ -507,7 +508,7 @@ void main() {
       expect(devAuth.currentSession, isNull);
       expect(DevAuthService.persistedSession, isNull);
       expect(find.byType(WelcomeScreen), findsOneWidget);
-      expect(find.byType(Phase0Screen), findsNothing);
+      expect(find.byType(HomeScreen), findsNothing);
     });
   });
 
@@ -778,8 +779,8 @@ void main() {
       ));
       await tester.pumpAndSettle();
 
-      // Must NOT show Phase0Screen; must resume at VerifyEmailScreen!
-      expect(find.byType(Phase0Screen), findsNothing);
+      // Must NOT show HomeScreen; must resume at VerifyEmailScreen!
+      expect(find.byType(HomeScreen), findsNothing);
       expect(find.byType(VerifyEmailScreen), findsOneWidget);
     });
 

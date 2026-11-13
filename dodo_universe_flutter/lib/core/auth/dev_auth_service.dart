@@ -1,5 +1,4 @@
 import 'dart:async';
-import 'dart:io';
 import 'package:flutter/foundation.dart';
 import 'package:supabase_flutter/supabase_flutter.dart';
 import 'auth_service.dart';
@@ -160,7 +159,7 @@ class DevAuthService implements IAuthService {
   @override
   Future<bool> getTrustedRegistrationStatus([User? user]) async {
     if (simulateNetworkError) {
-      throw const SocketException('Network error verifying profile status');
+      throw Exception('Network error verifying profile status');
     }
     final target = user ?? _currentUser;
     if (target == null) return false;

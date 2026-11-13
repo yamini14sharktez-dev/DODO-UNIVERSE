@@ -4,7 +4,7 @@ import '../../core/theme/app_theme.dart';
 import '../../core/widgets/cooldown_timer.dart';
 import '../../core/widgets/otp_input_field.dart';
 import '../../core/widgets/primary_button.dart';
-import '../phase0_screen.dart';
+import '../home_screen.dart';
 import 'verify_email_screen.dart';
 
 /// Screen 3: Mobile OTP verification screen.
@@ -91,8 +91,7 @@ class _VerifyMobileScreenState extends State<VerifyMobileScreen> {
           Navigator.pushAndRemoveUntil(
             context,
             MaterialPageRoute(
-              builder: (context) =>
-                  Phase0Screen(authService: widget.authService),
+              builder: (context) => HomeScreen(authService: widget.authService),
             ),
             (route) => false,
           );
