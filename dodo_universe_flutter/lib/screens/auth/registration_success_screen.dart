@@ -2,7 +2,7 @@ import 'package:flutter/material.dart';
 import '../../core/auth/auth_service.dart';
 import '../../core/theme/app_theme.dart';
 import '../../core/widgets/primary_button.dart';
-import '../phase0_screen.dart';
+import '../home_screen.dart';
 
 /// Screen 5: Registration Success confirmation screen.
 class RegistrationSuccessScreen extends StatelessWidget {
@@ -130,7 +130,7 @@ class RegistrationSuccessScreen extends StatelessWidget {
                           context,
                           MaterialPageRoute(
                             builder: (context) =>
-                                Phase0Screen(authService: authService),
+                                HomeScreen(authService: authService),
                           ),
                           (route) => false,
                         );

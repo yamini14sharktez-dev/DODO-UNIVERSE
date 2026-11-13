@@ -1,9 +1,9 @@
 import 'dart:async';
-import 'dart:io';
 import 'package:flutter/foundation.dart';
 import 'package:supabase_flutter/supabase_flutter.dart';
 import '../config/app_config.dart';
 import '../supabase/supabase_client.dart';
+import 'go_auth_service.dart';
 
 /// Represents the result of an authentication operation.
 class AuthResult {
@@ -80,7 +80,20 @@ class AuthService implements IAuthService {
       : _customClient = client,
         _customDevMode = isDevMode;
 
-  static IAuthService instance = AuthService();
+  static IAuthService? _customInstance;
+  static final IAuthService _defaultSupabaseInstance = AuthService();
+
+  static IAuthService get instance {
+    if (_customInstance != null) return _customInstance!;
+    if (AppConfig.current().useGoBackend) {
+      return GoAuthService.instance;
+    }
+    return _defaultSupabaseInstance;
+  }
+
+  static set instance(IAuthService value) {
+    _customInstance = value;
+  }
 
   SupabaseClient? get _client {
     if (_customClient != null) return _customClient;
@@ -91,6 +104,15 @@ class AuthService implements IAuthService {
   bool get _isDevMode =>
       _customDevMode ??
       (AppConfig.current().environment != AppEnvironment.production);
+
+  static bool _isNetworkError(Object e) {
+    final s = e.toString().toLowerCase();
+    return s.contains('socketexception') ||
+        s.contains('clientexception') ||
+        s.contains('network') ||
+        s.contains('connection refused') ||
+        s.contains('failed host lookup');
+  }
 
   /// Formats an Indian 10-digit mobile number into E.164 (+91XXXXXXXXXX) format.
   static String formatIndianPhone(String phone) {
@@ -136,8 +158,6 @@ class AuthService implements IAuthService {
       }
 
       return res['is_registration_complete'] == true;
-    } on SocketException {
-      rethrow;
     } catch (e) {
       debugPrint('AuthService.getTrustedRegistrationStatus error: $e');
       rethrow;
@@ -231,11 +251,12 @@ class AuthService implements IAuthService {
       return const AuthResult.success();
     } on AuthException catch (e) {
       return AuthResult.failure(_mapAuthException(e));
-    } on SocketException {
-      return const AuthResult.failure(
-        'Network error. Please check your internet connection.',
-      );
     } catch (e) {
+      if (_isNetworkError(e)) {
+        return const AuthResult.failure(
+          'Network error. Please check your internet connection.',
+        );
+      }
       return AuthResult.failure('Failed to send mobile OTP: $e');
     }
   }
@@ -321,11 +342,12 @@ class AuthService implements IAuthService {
       );
     } on AuthException catch (e) {
       return AuthResult.failure(_mapAuthException(e));
-    } on SocketException {
-      return const AuthResult.failure(
-        'Network error. Please check your internet connection.',
-      );
     } catch (e) {
+      if (_isNetworkError(e)) {
+        return const AuthResult.failure(
+          'Network error. Please check your internet connection.',
+        );
+      }
       return AuthResult.failure('Failed to verify mobile OTP: $e');
     }
   }
@@ -352,11 +374,12 @@ class AuthService implements IAuthService {
       return AuthResult.success(user: response.user);
     } on AuthException catch (e) {
       return AuthResult.failure(_mapAuthException(e));
-    } on SocketException {
-      return const AuthResult.failure(
-        'Network error. Please check your internet connection.',
-      );
     } catch (e) {
+      if (_isNetworkError(e)) {
+        return const AuthResult.failure(
+          'Network error. Please check your internet connection.',
+        );
+      }
       return AuthResult.failure('Failed to attach email address: $e');
     }
   }
@@ -449,11 +472,12 @@ class AuthService implements IAuthService {
       );
     } on AuthException catch (e) {
       return AuthResult.failure(_mapAuthException(e));
-    } on SocketException {
-      return const AuthResult.failure(
-        'Network error. Please check your internet connection.',
-      );
     } catch (e) {
+      if (_isNetworkError(e)) {
+        return const AuthResult.failure(
+          'Network error. Please check your internet connection.',
+        );
+      }
       return AuthResult.failure('Failed to verify email OTP: $e');
     }
   }
@@ -521,11 +545,12 @@ class AuthService implements IAuthService {
         );
       }
       return AuthResult.failure(_mapAuthException(e));
-    } on SocketException {
-      return const AuthResult.failure(
-        'Network error. Please check your internet connection.',
-      );
     } catch (e) {
+      if (_isNetworkError(e)) {
+        return const AuthResult.failure(
+          'Network error. Please check your internet connection.',
+        );
+      }
       return AuthResult.failure('Failed to send login OTP: $e');
     }
   }
@@ -609,11 +634,12 @@ class AuthService implements IAuthService {
       );
     } on AuthException catch (e) {
       return AuthResult.failure(_mapAuthException(e));
-    } on SocketException {
-      return const AuthResult.failure(
-        'Network error. Please check your internet connection.',
-      );
     } catch (e) {
+      if (_isNetworkError(e)) {
+        return const AuthResult.failure(
+          'Network error. Please check your internet connection.',
+        );
+      }
       return AuthResult.failure('Failed to verify login OTP: $e');
     }
   }
