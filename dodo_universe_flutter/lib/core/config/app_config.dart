@@ -9,6 +9,8 @@ class AppConfig {
   final String environmentName;
   final String supabaseUrl;
   final String supabasePublishableKey;
+  final String apiBaseUrl;
+  final bool useGoBackend;
 
   /// Backwards-compatible alias for publishable key
   String get supabaseAnonKey => supabasePublishableKey;
@@ -18,6 +20,8 @@ class AppConfig {
     required this.environmentName,
     required this.supabaseUrl,
     required this.supabasePublishableKey,
+    this.apiBaseUrl = 'http://localhost:8080',
+    this.useGoBackend = true,
   });
 
   static const AppConfig development = AppConfig(
@@ -29,8 +33,14 @@ class AppConfig {
     ),
     supabasePublishableKey: String.fromEnvironment(
       'SUPABASE_PUBLISHABLE_KEY',
-      defaultValue: String.fromEnvironment('SUPABASE_ANON_KEY', defaultValue: ''),
+      defaultValue:
+          String.fromEnvironment('SUPABASE_ANON_KEY', defaultValue: ''),
     ),
+    apiBaseUrl: String.fromEnvironment(
+      'API_BASE_URL',
+      defaultValue: 'http://localhost:8080',
+    ),
+    useGoBackend: bool.fromEnvironment('USE_GO_BACKEND', defaultValue: true),
   );
 
   static const AppConfig staging = AppConfig(
@@ -42,8 +52,14 @@ class AppConfig {
     ),
     supabasePublishableKey: String.fromEnvironment(
       'SUPABASE_PUBLISHABLE_KEY',
-      defaultValue: String.fromEnvironment('SUPABASE_ANON_KEY', defaultValue: ''),
+      defaultValue:
+          String.fromEnvironment('SUPABASE_ANON_KEY', defaultValue: ''),
     ),
+    apiBaseUrl: String.fromEnvironment(
+      'API_BASE_URL',
+      defaultValue: 'https://api-staging.dodouniverse.com',
+    ),
+    useGoBackend: bool.fromEnvironment('USE_GO_BACKEND', defaultValue: true),
   );
 
   static const AppConfig production = AppConfig(
@@ -55,12 +71,19 @@ class AppConfig {
     ),
     supabasePublishableKey: String.fromEnvironment(
       'SUPABASE_PUBLISHABLE_KEY',
-      defaultValue: String.fromEnvironment('SUPABASE_ANON_KEY', defaultValue: ''),
+      defaultValue:
+          String.fromEnvironment('SUPABASE_ANON_KEY', defaultValue: ''),
     ),
+    apiBaseUrl: String.fromEnvironment(
+      'API_BASE_URL',
+      defaultValue: 'https://api.dodouniverse.com',
+    ),
+    useGoBackend: bool.fromEnvironment('USE_GO_BACKEND', defaultValue: true),
   );
 
   static AppConfig current() {
-    const envString = String.fromEnvironment('ENVIRONMENT', defaultValue: 'development');
+    const envString =
+        String.fromEnvironment('ENVIRONMENT', defaultValue: 'development');
     switch (envString.toLowerCase()) {
       case 'production':
       case 'prod':

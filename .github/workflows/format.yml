@@ -2,24 +2,27 @@ name: Format
 
 on:
   push:
-    branches: [main]
+    branches: [main, setup, 'feature/**']
   pull_request:
-    branches: [main]
+    branches: [main, setup]
 
 jobs:
   format:
     runs-on: ubuntu-latest
+    defaults:
+      run:
+        working-directory: dodo_universe_flutter
 
     steps:
       - uses: actions/checkout@v4
 
       - uses: subosito/flutter-action@v2
         with:
-          flutter-version: '3.44.4'
+          flutter-version: '3.44.5'
+          cache: true
 
       - name: Install dependencies
         run: flutter pub get
 
       - name: Check formatting
-        working-directory: dodo_universe_server
-        run: dart format --set-exit-if-changed .
+        run: dart format --output=none --set-exit-if-changed .
