@@ -1,5 +1,6 @@
 import 'package:dodo_universe/core/auth/dev_auth_service.dart';
 import 'package:dodo_universe/screens/dashboard/dashboard_screen.dart';
+import 'package:dodo_universe/screens/dashboard/models/dashboard_models.dart';
 import 'package:dodo_universe/screens/dashboard/screens/notifications_screen.dart';
 import 'package:dodo_universe/screens/dashboard/screens/order_detail_sheet.dart';
 import 'package:dodo_universe/screens/dashboard/screens/provider_detail_sheet.dart';

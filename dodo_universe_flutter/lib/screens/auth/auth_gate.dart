@@ -203,7 +203,7 @@ class _AuthGateState extends State<AuthGate> {
       if (widget.authenticatedScreen != null) {
         return widget.authenticatedScreen!;
       }
-      return DashboardScreen(authService: _auth);
+      return Phase0Screen(authService: _auth);
     }
 
     // Incomplete registration: resume email verification

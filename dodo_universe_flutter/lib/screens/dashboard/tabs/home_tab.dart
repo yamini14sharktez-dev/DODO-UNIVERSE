@@ -754,7 +754,7 @@ class _HomeTabState extends State<HomeTab> {
   }
 
   Widget _buildCategoryGrid() {
-    final categories = ServiceCategory.sampleCategories;
+    const categories = ServiceCategory.sampleCategories;
     return LayoutBuilder(
       builder: (context, constraints) {
         final crossAxisCount = constraints.maxWidth > 600 ? 4 : 2;
@@ -781,7 +781,7 @@ class _HomeTabState extends State<HomeTab> {
   }
 
   Widget _buildRecommendedProvidersList() {
-    final providers = ServiceProvider.sampleProviders;
+    const providers = ServiceProvider.sampleProviders;
     if (providers.isEmpty) {
       return Container(
         width: double.infinity,
