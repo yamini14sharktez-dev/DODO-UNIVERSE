@@ -2,8 +2,11 @@ import 'dart:async';
 import 'package:flutter/material.dart';
 import 'package:supabase_flutter/supabase_flutter.dart';
 import '../../core/auth/auth_service.dart';
+import '../../core/auth/go_auth_service.dart';
+import '../../core/config/app_config.dart';
 import '../../core/supabase/supabase_client.dart';
 import '../../core/theme/app_theme.dart';
+import '../dashboard/dashboard_screen.dart';
 import '../phase0_screen.dart';
 import 'verify_email_screen.dart';
 import 'welcome_screen.dart';
@@ -19,11 +22,13 @@ import 'welcome_screen.dart';
 class AuthGate extends StatefulWidget {
   final IAuthService? authService;
   final bool initialLoading;
+  final Widget? authenticatedScreen;
 
   const AuthGate({
     super.key,
     this.authService,
     this.initialLoading = false,
+    this.authenticatedScreen,
   });
 
   @override
@@ -42,7 +47,10 @@ class _AuthGateState extends State<AuthGate> {
   @override
   void initState() {
     super.initState();
-    _auth = widget.authService ?? AuthService.instance;
+    _auth = widget.authService ??
+        (AppConfig.current().useGoBackend
+            ? GoAuthService.create()
+            : AuthService.instance);
     _isLoading = widget.initialLoading || _auth.currentUser != null;
     _currentUser = _auth.currentUser;
     _initAuth();
@@ -82,8 +90,10 @@ class _AuthGateState extends State<AuthGate> {
   }
 
   Future<void> _initAuth() async {
-    // Only attempt real Supabase initialization if a custom auth service is not provided
-    if (widget.authService == null && !SupabaseManager.isInitialized) {
+    // Only attempt real Supabase initialization if a custom auth service is not provided and not using Go backend
+    if (widget.authService == null &&
+        !AppConfig.current().useGoBackend &&
+        !SupabaseManager.isInitialized) {
       setState(() {
         _isLoading = true;
       });
@@ -190,7 +200,10 @@ class _AuthGateState extends State<AuthGate> {
     }
 
     if (_isTrustedComplete) {
-      return Phase0Screen(authService: _auth);
+      if (widget.authenticatedScreen != null) {
+        return widget.authenticatedScreen!;
+      }
+      return DashboardScreen(authService: _auth);
     }
 
     // Incomplete registration: resume email verification
