@@ -180,7 +180,7 @@ class _HomeTabState extends State<HomeTab> {
                 ),
                 const SizedBox(height: 12),
                 DropdownButtonFormField<String>(
-                  value: selectedCategory,
+                  initialValue: selectedCategory,
                   decoration: const InputDecoration(labelText: 'Category'),
                   items: ServiceCategory.sampleCategories
                       .map((c) => DropdownMenuItem(
@@ -650,7 +650,7 @@ class _HomeTabState extends State<HomeTab> {
           children: [
             Container(
               padding: const EdgeInsets.all(10),
-              decoration: BoxDecoration(
+              decoration: const BoxDecoration(
                 color: AppTheme.pineGreenLight,
                 shape: BoxShape.circle,
               ),
@@ -713,7 +713,7 @@ class _HomeTabState extends State<HomeTab> {
           children: [
             Container(
               padding: const EdgeInsets.all(10),
-              decoration: BoxDecoration(
+              decoration: const BoxDecoration(
                 color: AppTheme.warmOchreLight,
                 shape: BoxShape.circle,
               ),

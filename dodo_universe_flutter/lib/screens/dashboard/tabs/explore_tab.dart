@@ -342,7 +342,7 @@ class _ExploreTabState extends State<ExploreTab> {
                     child: Column(
                       mainAxisAlignment: MainAxisAlignment.center,
                       children: [
-                        Icon(Icons.search_off_rounded,
+                        const Icon(Icons.search_off_rounded,
                             size: 54, color: AppTheme.textSubtle),
                         const SizedBox(height: 12),
                         Text(

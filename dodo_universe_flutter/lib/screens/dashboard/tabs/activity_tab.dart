@@ -485,7 +485,7 @@ class _ActivityTabState extends State<ActivityTab>
                     children: [
                       Container(
                         padding: const EdgeInsets.all(6),
-                        decoration: BoxDecoration(
+                        decoration: const BoxDecoration(
                           color: AppTheme.surfaceSage,
                           shape: BoxShape.circle,
                         ),
@@ -531,7 +531,7 @@ class _ActivityTabState extends State<ActivityTab>
         children: [
           Container(
             padding: const EdgeInsets.all(18),
-            decoration: BoxDecoration(
+            decoration: const BoxDecoration(
               color: AppTheme.surfaceMuted,
               shape: BoxShape.circle,
             ),

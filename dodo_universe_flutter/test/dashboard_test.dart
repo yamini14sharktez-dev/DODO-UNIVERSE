@@ -20,18 +20,25 @@ void main() {
     devAuth = DevAuthService();
   });
 
-  Widget buildTestableWidget(Widget child, {Size size = const Size(390, 844)}) {
+  void setScreenSize(WidgetTester tester, Size size) {
+    tester.view.physicalSize = size;
+    tester.view.devicePixelRatio = 1.0;
+    addTearDown(() {
+      tester.view.resetPhysicalSize();
+      tester.view.resetDevicePixelRatio();
+    });
+  }
+
+  Widget buildTestableWidget(Widget child) {
     return MaterialApp(
-      home: MediaQuery(
-        data: MediaQueryData(size: size),
-        child: child,
-      ),
+      home: Material(child: child),
     );
   }
 
   group('DODO Universe Warm Nordic Atelier Dashboard Tests', () {
     testWidgets('1. DashboardScreen renders with Mobile BottomNavigationBar',
         (tester) async {
+      setScreenSize(tester, const Size(390, 844));
       await tester.pumpWidget(
         buildTestableWidget(DashboardScreen(authService: devAuth)),
       );
@@ -47,11 +54,9 @@ void main() {
 
     testWidgets('2. Responsive Tablet layout shows NavigationRail',
         (tester) async {
+      setScreenSize(tester, const Size(768, 1024));
       await tester.pumpWidget(
-        buildTestableWidget(
-          DashboardScreen(authService: devAuth),
-          size: const Size(768, 1024),
-        ),
+        buildTestableWidget(DashboardScreen(authService: devAuth)),
       );
       await tester.pumpAndSettle();
 
@@ -61,11 +66,9 @@ void main() {
 
     testWidgets('3. Responsive Desktop layout shows Fixed Sidebar',
         (tester) async {
+      setScreenSize(tester, const Size(1280, 800));
       await tester.pumpWidget(
-        buildTestableWidget(
-          DashboardScreen(authService: devAuth),
-          size: const Size(1280, 800),
-        ),
+        buildTestableWidget(DashboardScreen(authService: devAuth)),
       );
       await tester.pumpAndSettle();
 
@@ -76,10 +79,9 @@ void main() {
 
     testWidgets('4. HomeTab renders search bar, actions and categories',
         (tester) async {
+      setScreenSize(tester, const Size(390, 844));
       await tester.pumpWidget(
-        buildTestableWidget(
-          const Scaffold(body: HomeTab(userName: 'Alex')),
-        ),
+        buildTestableWidget(const HomeTab(userName: 'Alex')),
       );
       await tester.pumpAndSettle();
 
@@ -92,6 +94,7 @@ void main() {
     testWidgets(
         '5. ExploreTab shows clean empty state when no services are loaded',
         (tester) async {
+      setScreenSize(tester, const Size(390, 844));
       await tester.pumpWidget(
         buildTestableWidget(const ExploreTab()),
       );
@@ -105,6 +108,7 @@ void main() {
     testWidgets(
         '6. ActivityTab shows clean empty state for bookings & requests',
         (tester) async {
+      setScreenSize(tester, const Size(390, 844));
       await tester.pumpWidget(
         buildTestableWidget(const ActivityTab()),
       );
@@ -124,6 +128,7 @@ void main() {
     testWidgets(
         '7. ProviderTab displays Studio wallet empty state & availability',
         (tester) async {
+      setScreenSize(tester, const Size(390, 844));
       await tester.pumpWidget(
         buildTestableWidget(const ProviderTab()),
       );
@@ -138,6 +143,7 @@ void main() {
 
     testWidgets('8. ProfileTab displays user account & settings options',
         (tester) async {
+      setScreenSize(tester, const Size(390, 844));
       await tester.pumpWidget(
         buildTestableWidget(ProfileTab(authService: devAuth)),
       );
@@ -152,6 +158,7 @@ void main() {
 
     testWidgets('9. NotificationsScreen renders empty state when caught up',
         (tester) async {
+      setScreenSize(tester, const Size(390, 844));
       await tester.pumpWidget(
         buildTestableWidget(const NotificationsScreen()),
       );
@@ -164,6 +171,7 @@ void main() {
 
     testWidgets('10. OrderDetailSheet renders 4-stage life-cycle timeline',
         (tester) async {
+      setScreenSize(tester, const Size(390, 844));
       final testOrder = OrderRecord(
         id: 'TEST-ORD-01',
         serviceTitle: 'Test Service Booking',
@@ -189,6 +197,7 @@ void main() {
 
     testWidgets('11. RequestDetailSheet renders quotations and acceptance',
         (tester) async {
+      setScreenSize(tester, const Size(390, 844));
       final testRequest = RequestRecord(
         id: 'TEST-REQ-01',
         title: 'Test Request Title',
@@ -222,7 +231,8 @@ void main() {
     testWidgets(
         '12. ProviderDetailSheet renders profile & standard service menu',
         (tester) async {
-      final testProvider = ServiceProvider(
+      setScreenSize(tester, const Size(390, 844));
+      const testProvider = ServiceProvider(
         id: 'p-test',
         name: 'Test Pro Specialist',
         category: 'Tech & Electronics',
@@ -236,7 +246,7 @@ void main() {
         availability: 'Available',
         completedJobs: 15,
         bio: 'Professional test bio.',
-        servicesOffered: const ['Service A', 'Service B'],
+        servicesOffered: ['Service A', 'Service B'],
       );
       await tester.pumpWidget(
         buildTestableWidget(ProviderDetailSheet(provider: testProvider)),

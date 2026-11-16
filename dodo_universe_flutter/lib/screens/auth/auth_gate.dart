@@ -6,7 +6,6 @@ import '../../core/auth/go_auth_service.dart';
 import '../../core/config/app_config.dart';
 import '../../core/supabase/supabase_client.dart';
 import '../../core/theme/app_theme.dart';
-import '../dashboard/dashboard_screen.dart';
 import '../phase0_screen.dart';
 import 'verify_email_screen.dart';
 import 'welcome_screen.dart';
