@@ -28,14 +28,23 @@ void main() async {
     }
   }
 
-  runApp(DodoUniverseApp(authService: authService));
+  runApp(DodoUniverseApp(
+    authService: authService,
+    authenticatedScreen: DashboardScreen(authService: authService),
+  ));
 }
 
 class DodoUniverseApp extends StatelessWidget {
   final IAuthService? authService;
   final Widget? home;
+  final Widget? authenticatedScreen;
 
-  const DodoUniverseApp({super.key, this.authService, this.home});
+  const DodoUniverseApp({
+    super.key,
+    this.authService,
+    this.home,
+    this.authenticatedScreen,
+  });
 
   @override
   Widget build(BuildContext context) {
@@ -46,7 +55,7 @@ class DodoUniverseApp extends StatelessWidget {
       home: home ??
           AuthGate(
             authService: authService,
-            authenticatedScreen: DashboardScreen(authService: authService),
+            authenticatedScreen: authenticatedScreen,
           ),
     );
   }

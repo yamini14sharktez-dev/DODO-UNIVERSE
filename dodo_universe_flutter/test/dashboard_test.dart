@@ -222,7 +222,7 @@ void main() {
     testWidgets(
         '12. ProviderDetailSheet renders profile & standard service menu',
         (tester) async {
-      const testProvider = ServiceProvider(
+      final testProvider = ServiceProvider(
         id: 'p-test',
         name: 'Test Pro Specialist',
         category: 'Tech & Electronics',
@@ -236,10 +236,10 @@ void main() {
         availability: 'Available',
         completedJobs: 15,
         bio: 'Professional test bio.',
-        servicesOffered: ['Service A', 'Service B'],
+        servicesOffered: const ['Service A', 'Service B'],
       );
       await tester.pumpWidget(
-        buildTestableWidget(const ProviderDetailSheet(provider: testProvider)),
+        buildTestableWidget(ProviderDetailSheet(provider: testProvider)),
       );
       await tester.pumpAndSettle();
 
