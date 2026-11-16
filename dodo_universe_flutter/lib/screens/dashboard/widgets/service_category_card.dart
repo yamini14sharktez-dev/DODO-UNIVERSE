@@ -34,7 +34,8 @@ class ServiceCategoryCard extends StatelessWidget {
               color: isSelected ? AppTheme.pineGreen : AppTheme.borderSubtle,
               width: isSelected ? 1.5 : 1,
             ),
-            boxShadow: isSelected ? AppTheme.elevatedShadow : AppTheme.softShadow,
+            boxShadow:
+                isSelected ? AppTheme.elevatedShadow : AppTheme.softShadow,
           ),
           child: Column(
             crossAxisAlignment: CrossAxisAlignment.start,
@@ -50,7 +51,8 @@ class ServiceCategoryCard extends StatelessWidget {
                       color: isSelected
                           ? AppTheme.pineGreen
                           : AppTheme.surfaceMuted,
-                      borderRadius: BorderRadius.circular(AppTheme.radiusMedium),
+                      borderRadius:
+                          BorderRadius.circular(AppTheme.radiusMedium),
                     ),
                     child: Icon(
                       category.icon,

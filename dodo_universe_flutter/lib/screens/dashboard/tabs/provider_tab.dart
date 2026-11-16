@@ -86,7 +86,8 @@ class _ProviderTabState extends State<ProviderTab> {
                 });
                 Navigator.pop(context);
                 ScaffoldMessenger.of(context).showSnackBar(
-                  const SnackBar(content: Text('New service offering published!')),
+                  const SnackBar(
+                      content: Text('New service offering published!')),
                 );
               }
             },
@@ -98,7 +99,8 @@ class _ProviderTabState extends State<ProviderTab> {
   }
 
   void _showSubmitProposalModal(RequestRecord req) {
-    final priceCtrl = TextEditingController(text: req.budgetEstimate.toStringAsFixed(0));
+    final priceCtrl =
+        TextEditingController(text: req.budgetEstimate.toStringAsFixed(0));
     final turnaroundCtrl = TextEditingController(text: 'Tomorrow afternoon');
     final noteCtrl = TextEditingController();
 
@@ -171,7 +173,8 @@ class _ProviderTabState extends State<ProviderTab> {
                 maxLines: 3,
                 decoration: const InputDecoration(
                   labelText: 'Proposal Note / Included Items',
-                  hintText: 'Describe your tools, background, and how you will complete this request...',
+                  hintText:
+                      'Describe your tools, background, and how you will complete this request...',
                 ),
               ),
               const SizedBox(height: 20),
@@ -185,7 +188,8 @@ class _ProviderTabState extends State<ProviderTab> {
                         backgroundColor: AppTheme.forestSlate,
                         content: Text(
                           'Quotation proposal submitted to client!',
-                          style: GoogleFonts.plusJakartaSans(color: AppTheme.surfaceWhite),
+                          style: GoogleFonts.plusJakartaSans(
+                              color: AppTheme.surfaceWhite),
                         ),
                       ),
                     );
@@ -249,7 +253,8 @@ class _ProviderTabState extends State<ProviderTab> {
                   ),
                 ),
                 Container(
-                  padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 3),
+                  padding:
+                      const EdgeInsets.symmetric(horizontal: 8, vertical: 3),
                   decoration: BoxDecoration(
                     color: AppTheme.warmOchreLight,
                     borderRadius: BorderRadius.circular(AppTheme.radiusPill),
@@ -314,7 +319,8 @@ class _ProviderTabState extends State<ProviderTab> {
               Row(
                 children: [
                   Container(
-                    padding: const EdgeInsets.symmetric(horizontal: 10, vertical: 5),
+                    padding:
+                        const EdgeInsets.symmetric(horizontal: 10, vertical: 5),
                     decoration: BoxDecoration(
                       color: AppTheme.pineGreen,
                       borderRadius: BorderRadius.circular(AppTheme.radiusPill),
@@ -322,7 +328,8 @@ class _ProviderTabState extends State<ProviderTab> {
                     child: Row(
                       mainAxisSize: MainAxisSize.min,
                       children: [
-                        const Icon(Icons.account_balance_wallet_outlined, size: 14, color: AppTheme.surfaceWhite),
+                        const Icon(Icons.account_balance_wallet_outlined,
+                            size: 14, color: AppTheme.surfaceWhite),
                         const SizedBox(width: 5),
                         Text(
                           'Provider Balance',
@@ -405,7 +412,9 @@ class _ProviderTabState extends State<ProviderTab> {
                 height: 10,
                 decoration: BoxDecoration(
                   shape: BoxShape.circle,
-                  color: _isAcceptingOrders ? AppTheme.pineGreen : AppTheme.textMuted,
+                  color: _isAcceptingOrders
+                      ? AppTheme.pineGreen
+                      : AppTheme.textMuted,
                 ),
               ),
               const SizedBox(width: 12),
@@ -413,7 +422,9 @@ class _ProviderTabState extends State<ProviderTab> {
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
                   Text(
-                    _isAcceptingOrders ? 'Accepting New Client Jobs' : 'Studio Paused',
+                    _isAcceptingOrders
+                        ? 'Accepting New Client Jobs'
+                        : 'Studio Paused',
                     style: GoogleFonts.outfit(
                       fontSize: 15,
                       fontWeight: FontWeight.w700,

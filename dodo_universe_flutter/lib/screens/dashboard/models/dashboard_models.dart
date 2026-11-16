@@ -21,56 +21,64 @@ class ServiceCategory {
       id: 'tech_repairs',
       name: 'Tech & Electronics',
       icon: Icons.devices_other_rounded,
-      description: 'Laptops, screen replacements, phones, storage upgrades & OS fixes',
+      description:
+          'Laptops, screen replacements, phones, storage upgrades & OS fixes',
       providerCount: 0,
     ),
     ServiceCategory(
       id: 'home_living',
       name: 'Home & Living',
       icon: Icons.roofing_rounded,
-      description: 'Appliance care, furniture setup, electrical checks & repairs',
+      description:
+          'Appliance care, furniture setup, electrical checks & repairs',
       providerCount: 0,
     ),
     ServiceCategory(
       id: 'creative_code',
       name: 'Design & Engineering',
       icon: Icons.terminal_rounded,
-      description: 'Custom web apps, UI/UX design, brand identities & coding mentorship',
+      description:
+          'Custom web apps, UI/UX design, brand identities & coding mentorship',
       providerCount: 0,
     ),
     ServiceCategory(
       id: 'mentorship',
       name: 'Academic & Professional',
       icon: Icons.psychology_rounded,
-      description: 'Subject tutoring, exam preparation, code reviews & career mentoring',
+      description:
+          'Subject tutoring, exam preparation, code reviews & career mentoring',
       providerCount: 0,
     ),
     ServiceCategory(
       id: 'delivery_errands',
       name: 'Errands & Delivery',
       icon: Icons.local_shipping_rounded,
-      description: 'Neighborhood delivery, urgent document courier & errand services',
+      description:
+          'Neighborhood delivery, urgent document courier & errand services',
       providerCount: 0,
     ),
     ServiceCategory(
       id: 'events_media',
       name: 'Media & Photography',
       icon: Icons.photo_camera_rounded,
-      description: 'Portrait sessions, corporate media, event photography & video editing',
+      description:
+          'Portrait sessions, corporate media, event photography & video editing',
       providerCount: 0,
     ),
     ServiceCategory(
       id: 'print_3d',
       name: 'Print & Fabrication',
       icon: Icons.precision_manufacturing_rounded,
-      description: 'Rapid 3D prototyping, architectural prints & document binding',
+      description:
+          'Rapid 3D prototyping, architectural prints & document binding',
       providerCount: 0,
     ),
     ServiceCategory(
       id: 'health_fitness',
       name: 'Fitness & Wellness',
       icon: Icons.self_improvement_rounded,
-      description: 'Personal fitness coaching, yoga sessions & athletic nutrition',
+      description:
+          'Personal fitness coaching, yoga sessions & athletic nutrition',
       providerCount: 0,
     ),
   ];

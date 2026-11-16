@@ -185,8 +185,8 @@ class _ActivityTabState extends State<ActivityTab>
                   message: 'Browse services and book verified professionals.',
                 )
               : ListView.separated(
-                  padding: const EdgeInsets.symmetric(
-                      horizontal: 20, vertical: 8),
+                  padding:
+                      const EdgeInsets.symmetric(horizontal: 20, vertical: 8),
                   itemCount: filteredOrders.length,
                   separatorBuilder: (_, __) => const SizedBox(height: 12),
                   itemBuilder: (context, index) {
@@ -393,7 +393,6 @@ class _ActivityTabState extends State<ActivityTab>
           ),
         ),
         const SizedBox(height: 8),
-
         Expanded(
           child: filteredRequests.isEmpty
               ? _buildEmptyState(
@@ -403,8 +402,8 @@ class _ActivityTabState extends State<ActivityTab>
                       'Post a custom service request to receive quotes from providers.',
                 )
               : ListView.separated(
-                  padding: const EdgeInsets.symmetric(
-                      horizontal: 20, vertical: 8),
+                  padding:
+                      const EdgeInsets.symmetric(horizontal: 20, vertical: 8),
                   itemCount: filteredRequests.length,
                   separatorBuilder: (_, __) => const SizedBox(height: 12),
                   itemBuilder: (context, index) {

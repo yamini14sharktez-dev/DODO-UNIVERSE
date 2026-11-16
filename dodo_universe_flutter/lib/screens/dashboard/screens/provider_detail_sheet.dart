@@ -106,7 +106,8 @@ class ProviderDetailSheet extends StatelessWidget {
 
               // Metric Stats Bar
               Container(
-                padding: const EdgeInsets.symmetric(vertical: 12, horizontal: 16),
+                padding:
+                    const EdgeInsets.symmetric(vertical: 12, horizontal: 16),
                 decoration: BoxDecoration(
                   color: AppTheme.canvasColor,
                   borderRadius: BorderRadius.circular(AppTheme.radiusLarge),
@@ -119,7 +120,8 @@ class ProviderDetailSheet extends StatelessWidget {
                     _buildDivider(),
                     _buildMetric('Reviews', '${provider.reviewCount}'),
                     _buildDivider(),
-                    _buildMetric('Completed', '${provider.completedJobs}+ jobs'),
+                    _buildMetric(
+                        'Completed', '${provider.completedJobs}+ jobs'),
                   ],
                 ),
               ),

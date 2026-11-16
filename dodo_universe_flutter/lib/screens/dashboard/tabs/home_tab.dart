@@ -186,8 +186,8 @@ class _HomeTabState extends State<HomeTab> {
                       .map((c) => DropdownMenuItem(
                             value: c.name,
                             child: Text(c.name,
-                                style: GoogleFonts.plusJakartaSans(
-                                    fontSize: 14)),
+                                style:
+                                    GoogleFonts.plusJakartaSans(fontSize: 14)),
                           ))
                       .toList(),
                   onChanged: (val) {

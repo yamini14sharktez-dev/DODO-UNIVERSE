@@ -139,8 +139,7 @@ class _NotificationsScreenState extends State<NotificationsScreen> {
                     selectedColor: AppTheme.pineGreen,
                     backgroundColor: AppTheme.surfaceWhite,
                     shape: RoundedRectangleBorder(
-                      borderRadius:
-                          BorderRadius.circular(AppTheme.radiusPill),
+                      borderRadius: BorderRadius.circular(AppTheme.radiusPill),
                       side: BorderSide(
                         color: isSelected
                             ? AppTheme.pineGreen
@@ -188,8 +187,8 @@ class _NotificationsScreenState extends State<NotificationsScreen> {
                     ),
                   )
                 : ListView.separated(
-                    padding: const EdgeInsets.symmetric(
-                        horizontal: 20, vertical: 8),
+                    padding:
+                        const EdgeInsets.symmetric(horizontal: 20, vertical: 8),
                     itemCount: filtered.length,
                     separatorBuilder: (_, __) => const SizedBox(height: 10),
                     itemBuilder: (context, index) {

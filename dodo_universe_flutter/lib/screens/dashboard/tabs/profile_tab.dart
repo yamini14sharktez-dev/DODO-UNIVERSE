@@ -326,7 +326,8 @@ class _ProfileTabState extends State<ProfileTab> {
                 _buildListTile(
                   icon: Icons.shield_outlined,
                   title: 'Terms of Service & Privacy Policy',
-                  subtitle: 'User privacy, service agreements & dispute handling',
+                  subtitle:
+                      'User privacy, service agreements & dispute handling',
                   trailing: const Icon(Icons.chevron_right_rounded,
                       color: AppTheme.textMuted),
                   onTap: () {},

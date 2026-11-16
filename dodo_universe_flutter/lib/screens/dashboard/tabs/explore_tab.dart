@@ -224,8 +224,7 @@ class _ExploreTabState extends State<ExploreTab> {
                   child: Container(
                     decoration: BoxDecoration(
                       color: AppTheme.surfaceWhite,
-                      borderRadius:
-                          BorderRadius.circular(AppTheme.radiusLarge),
+                      borderRadius: BorderRadius.circular(AppTheme.radiusLarge),
                       border: Border.all(color: AppTheme.borderSubtle),
                       boxShadow: AppTheme.softShadow,
                     ),
@@ -238,8 +237,7 @@ class _ExploreTabState extends State<ExploreTab> {
                             color: AppTheme.textMuted, size: 20),
                         suffixIcon: _searchQuery.isNotEmpty
                             ? IconButton(
-                                icon:
-                                    const Icon(Icons.clear_rounded, size: 18),
+                                icon: const Icon(Icons.clear_rounded, size: 18),
                                 onPressed: () {
                                   _searchController.clear();
                                   setState(() => _searchQuery = '');
@@ -258,8 +256,7 @@ class _ExploreTabState extends State<ExploreTab> {
                 const SizedBox(width: 10),
                 InkWell(
                   onTap: _showFilterModal,
-                  borderRadius:
-                      BorderRadius.circular(AppTheme.radiusMedium),
+                  borderRadius: BorderRadius.circular(AppTheme.radiusMedium),
                   child: Container(
                     padding: const EdgeInsets.all(13),
                     decoration: BoxDecoration(
@@ -319,8 +316,7 @@ class _ExploreTabState extends State<ExploreTab> {
                     selectedColor: AppTheme.pineGreen,
                     backgroundColor: AppTheme.surfaceWhite,
                     shape: RoundedRectangleBorder(
-                      borderRadius:
-                          BorderRadius.circular(AppTheme.radiusPill),
+                      borderRadius: BorderRadius.circular(AppTheme.radiusPill),
                       side: BorderSide(
                         color: isSelected
                             ? AppTheme.pineGreen

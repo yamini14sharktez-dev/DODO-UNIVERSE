@@ -158,10 +158,8 @@ class _DashboardScreenState extends State<DashboardScreen> {
             onDestinationSelected: _onTabSelected,
             backgroundColor: AppTheme.surfaceWhite,
             indicatorColor: AppTheme.pineGreenLight,
-            selectedIconTheme:
-                const IconThemeData(color: AppTheme.pineGreen),
-            unselectedIconTheme:
-                const IconThemeData(color: AppTheme.textMuted),
+            selectedIconTheme: const IconThemeData(color: AppTheme.pineGreen),
+            unselectedIconTheme: const IconThemeData(color: AppTheme.textMuted),
             selectedLabelTextStyle: GoogleFonts.plusJakartaSans(
               color: AppTheme.pineGreen,
               fontWeight: FontWeight.w700,
@@ -222,7 +220,8 @@ class _DashboardScreenState extends State<DashboardScreen> {
               ),
             ],
           ),
-          const VerticalDivider(width: 1, thickness: 1, color: AppTheme.borderSubtle),
+          const VerticalDivider(
+              width: 1, thickness: 1, color: AppTheme.borderSubtle),
           Expanded(
             child: IndexedStack(
               index: _currentIndex,
@@ -308,22 +307,30 @@ class _DashboardScreenState extends State<DashboardScreen> {
                 const SizedBox(height: 12),
 
                 // Navigation Items
-                _buildSidebarItem(0, 'Home', Icons.home_outlined, Icons.home_rounded),
-                _buildSidebarItem(1, 'Find Services', Icons.explore_outlined, Icons.explore_rounded),
-                _buildSidebarItem(2, 'My Activity', Icons.assignment_outlined, Icons.assignment_rounded),
-                _buildSidebarItem(3, 'Provider Hub', Icons.storefront_outlined, Icons.storefront_rounded),
-                _buildSidebarItem(4, 'Profile & Settings', Icons.person_outline_rounded, Icons.person_rounded),
+                _buildSidebarItem(
+                    0, 'Home', Icons.home_outlined, Icons.home_rounded),
+                _buildSidebarItem(1, 'Find Services', Icons.explore_outlined,
+                    Icons.explore_rounded),
+                _buildSidebarItem(2, 'My Activity', Icons.assignment_outlined,
+                    Icons.assignment_rounded),
+                _buildSidebarItem(3, 'Provider Hub', Icons.storefront_outlined,
+                    Icons.storefront_rounded),
+                _buildSidebarItem(4, 'Profile & Settings',
+                    Icons.person_outline_rounded, Icons.person_rounded),
 
                 const Spacer(),
 
                 // Notifications action
                 Padding(
-                  padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 8),
+                  padding:
+                      const EdgeInsets.symmetric(horizontal: 16, vertical: 8),
                   child: ListTile(
                     shape: RoundedRectangleBorder(
-                      borderRadius: BorderRadius.circular(AppTheme.radiusMedium),
+                      borderRadius:
+                          BorderRadius.circular(AppTheme.radiusMedium),
                     ),
-                    leading: const Icon(Icons.notifications_none_rounded, color: AppTheme.forestSlate),
+                    leading: const Icon(Icons.notifications_none_rounded,
+                        color: AppTheme.forestSlate),
                     title: Text(
                       'Notifications',
                       style: GoogleFonts.plusJakartaSans(
@@ -357,7 +364,8 @@ class _DashboardScreenState extends State<DashboardScreen> {
     );
   }
 
-  Widget _buildSidebarItem(int index, String label, IconData icon, IconData activeIcon) {
+  Widget _buildSidebarItem(
+      int index, String label, IconData icon, IconData activeIcon) {
     final isSelected = _currentIndex == index;
 
     return Padding(
@@ -378,7 +386,8 @@ class _DashboardScreenState extends State<DashboardScreen> {
                 Icon(
                   isSelected ? activeIcon : icon,
                   size: 20,
-                  color: isSelected ? AppTheme.pineGreen : AppTheme.textSecondary,
+                  color:
+                      isSelected ? AppTheme.pineGreen : AppTheme.textSecondary,
                 ),
                 const SizedBox(width: 14),
                 Text(
@@ -386,7 +395,8 @@ class _DashboardScreenState extends State<DashboardScreen> {
                   style: GoogleFonts.plusJakartaSans(
                     fontSize: 14,
                     fontWeight: isSelected ? FontWeight.w700 : FontWeight.w500,
-                    color: isSelected ? AppTheme.pineGreen : AppTheme.textPrimary,
+                    color:
+                        isSelected ? AppTheme.pineGreen : AppTheme.textPrimary,
                   ),
                 ),
               ],

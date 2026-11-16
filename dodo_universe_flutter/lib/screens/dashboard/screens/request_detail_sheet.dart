@@ -164,7 +164,8 @@ class RequestDetailSheet extends StatelessWidget {
                   ),
                 )
               else
-                ...request.proposals.map((prop) => _buildProposalCard(context, prop)),
+                ...request.proposals
+                    .map((prop) => _buildProposalCard(context, prop)),
 
               const SizedBox(height: 16),
               SizedBox(

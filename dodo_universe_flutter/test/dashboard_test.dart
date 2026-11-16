@@ -88,7 +88,8 @@ void main() {
       expect(find.text('Explore Categories'), findsOneWidget);
     });
 
-    testWidgets('5. ExploreTab shows clean empty state when no services are loaded',
+    testWidgets(
+        '5. ExploreTab shows clean empty state when no services are loaded',
         (tester) async {
       await tester.pumpWidget(
         buildTestableWidget(const ExploreTab()),
@@ -100,7 +101,8 @@ void main() {
       expect(find.text('No services available yet.'), findsOneWidget);
     });
 
-    testWidgets('6. ActivityTab shows clean empty state for bookings & requests',
+    testWidgets(
+        '6. ActivityTab shows clean empty state for bookings & requests',
         (tester) async {
       await tester.pumpWidget(
         buildTestableWidget(const ActivityTab()),
@@ -114,10 +116,12 @@ void main() {
       await tester.tap(find.text('Custom Requests (Bids)'));
       await tester.pumpAndSettle();
 
-      expect(find.text("You haven't created any requests yet."), findsOneWidget);
+      expect(
+          find.text("You haven't created any requests yet."), findsOneWidget);
     });
 
-    testWidgets('7. ProviderTab displays Studio wallet empty state & availability',
+    testWidgets(
+        '7. ProviderTab displays Studio wallet empty state & availability',
         (tester) async {
       await tester.pumpWidget(
         buildTestableWidget(const ProviderTab()),
@@ -214,7 +218,8 @@ void main() {
       expect(find.text('Accept Bid & Hire'), findsWidgets);
     });
 
-    testWidgets('12. ProviderDetailSheet renders profile & standard service menu',
+    testWidgets(
+        '12. ProviderDetailSheet renders profile & standard service menu',
         (tester) async {
       const testProvider = ServiceProvider(
         id: 'p-test',

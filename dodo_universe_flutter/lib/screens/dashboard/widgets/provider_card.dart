@@ -99,8 +99,7 @@ class ProviderCard extends StatelessWidget {
                         const EdgeInsets.symmetric(horizontal: 8, vertical: 4),
                     decoration: BoxDecoration(
                       color: AppTheme.surfaceSage,
-                      borderRadius:
-                          BorderRadius.circular(AppTheme.radiusPill),
+                      borderRadius: BorderRadius.circular(AppTheme.radiusPill),
                     ),
                     child: Row(
                       mainAxisSize: MainAxisSize.min,

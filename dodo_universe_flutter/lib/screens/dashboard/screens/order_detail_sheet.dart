@@ -194,7 +194,10 @@ class OrderDetailSheet extends StatelessWidget {
         'done': order.status == OrderStatus.inProgress ||
             order.status == OrderStatus.completed
       },
-      {'title': 'Completed & Settled', 'done': order.status == OrderStatus.completed},
+      {
+        'title': 'Completed & Settled',
+        'done': order.status == OrderStatus.completed
+      },
     ];
 
     return Column(
@@ -215,7 +218,8 @@ class OrderDetailSheet extends StatelessWidget {
                     color: isDone ? AppTheme.pineGreen : AppTheme.surfaceWhite,
                     shape: BoxShape.circle,
                     border: Border.all(
-                      color: isDone ? AppTheme.pineGreen : AppTheme.borderSubtle,
+                      color:
+                          isDone ? AppTheme.pineGreen : AppTheme.borderSubtle,
                       width: 2,
                     ),
                   ),
@@ -241,9 +245,7 @@ class OrderDetailSheet extends StatelessWidget {
                   style: GoogleFonts.plusJakartaSans(
                     fontWeight: isDone ? FontWeight.w700 : FontWeight.w500,
                     fontSize: 13.5,
-                    color: isDone
-                        ? AppTheme.textPrimary
-                        : AppTheme.textMuted,
+                    color: isDone ? AppTheme.textPrimary : AppTheme.textMuted,
                   ),
                 ),
               ),
