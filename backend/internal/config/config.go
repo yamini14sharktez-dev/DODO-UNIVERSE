@@ -88,7 +88,7 @@ func (c *Config) Validate() error {
 	if c.StorageType == "postgres" && c.DatabaseURL == "" {
 		return errors.New("DATABASE_URL is required when STORAGE_TYPE is set to 'postgres'")
 	}
-	if c.DatabaseURL != "" && (c.UseMemoryStore || c.StorageType == "memory") {
+	if c.IsProduction() && c.DatabaseURL != "" && (c.UseMemoryStore || c.StorageType == "memory") {
 		return errors.New("conflicting database configuration: DATABASE_URL is configured but STORAGE_TYPE is 'memory' or USE_MEMORY_STORE is true")
 	}
 

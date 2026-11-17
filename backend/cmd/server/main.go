@@ -77,7 +77,8 @@ func main() {
 	requestQuoteSvc := requestquote.NewService()
 	notificationSvc := notification.NewService()
 	paymentSvc := payment.NewService()
-	adminSvc := admin.NewService()
+	adminSvc := admin.NewService(store, cfg.JWTSecret, cfg.JWTExpiryMinutes, cfg.RefreshExpiryDays)
+	adminAuthMiddleware := admin.Authenticate(cfg.JWTSecret)
 
 	// HTTP Multiplexer
 	mux := http.NewServeMux()
@@ -113,7 +114,7 @@ func main() {
 	requestquote.NewHandler(requestQuoteSvc).RegisterRoutes(mux, authMiddleware)
 	notification.NewHandler(notificationSvc).RegisterRoutes(mux, authMiddleware)
 	payment.NewHandler(paymentSvc).RegisterRoutes(mux, authMiddleware)
-	admin.NewHandler(adminSvc).RegisterRoutes(mux, authMiddleware)
+	admin.NewHandler(adminSvc).RegisterRoutes(mux, adminAuthMiddleware)
 
 	// Apply Middlewares in chain: CORS -> Logger -> Recoverer -> mux
 	handler := middleware.CORS(cfg.AllowedOrigins)(mux)

@@ -124,6 +124,10 @@ func (t *memoryTxStore) DevTestNumbers() DevTestNumberRepository {
 	return &memoryTxDevNumberRepo{tx: t}
 }
 
+func (t *memoryTxStore) Admin() AdminRepository {
+	return t.parent.Admin()
+}
+
 func (t *memoryTxStore) WithTx(ctx context.Context, fn func(tx Store) error) error {
 	// Nested transaction operates within the same snapshot
 	return fn(t)

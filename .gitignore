@@ -54,6 +54,11 @@ web/app/
 .codex/
 .mcp.json
 
+# Web & Node
+node_modules/
+dist/
+.vite/
+
 # OS generated files
 .DS_Store
 .DS_Store?
