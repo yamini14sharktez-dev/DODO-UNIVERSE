@@ -113,6 +113,10 @@ class _DashboardScreenState extends State<DashboardScreen> {
         child: BottomNavigationBar(
           currentIndex: _currentIndex,
           onTap: _onTabSelected,
+          type: BottomNavigationBarType.fixed,
+          backgroundColor: AppTheme.surfaceWhite,
+          selectedItemColor: AppTheme.pineGreen,
+          unselectedItemColor: AppTheme.textMuted,
           items: const [
             BottomNavigationBarItem(
               icon: Icon(Icons.home_outlined),
