@@ -1,4 +1,5 @@
 import 'package:dodo_universe/core/auth/dev_auth_service.dart';
+import 'package:dodo_universe/core/theme/app_theme.dart';
 import 'package:dodo_universe/screens/dashboard/dashboard_screen.dart';
 import 'package:dodo_universe/screens/dashboard/models/dashboard_models.dart';
 import 'package:dodo_universe/screens/dashboard/screens/notifications_screen.dart';
@@ -23,9 +24,12 @@ void main() {
   Widget buildTestableWidget(Widget child, {double? width, double? height}) {
     Widget content = child;
     if (width != null || height != null) {
-      content = SizedBox(
-        width: width,
-        height: height,
+      content = OverflowBox(
+        minWidth: width,
+        maxWidth: width,
+        minHeight: height,
+        maxHeight: height,
+        alignment: Alignment.topLeft,
         child: child,
       );
     }

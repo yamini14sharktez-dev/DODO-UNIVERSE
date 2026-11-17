@@ -282,27 +282,33 @@ class _DashboardScreenState extends State<DashboardScreen> {
                         ),
                       ),
                       const SizedBox(width: 12),
-                      Column(
-                        crossAxisAlignment: CrossAxisAlignment.start,
-                        children: [
-                          Text(
-                            'DODO Universe',
-                            style: GoogleFonts.outfit(
-                              fontWeight: FontWeight.w700,
-                              fontSize: 17,
-                              color: AppTheme.textPrimary,
-                              letterSpacing: -0.3,
+                      Expanded(
+                        child: Column(
+                          crossAxisAlignment: CrossAxisAlignment.start,
+                          children: [
+                            Text(
+                              'DODO Universe',
+                              style: GoogleFonts.outfit(
+                                fontWeight: FontWeight.w700,
+                                fontSize: 17,
+                                color: AppTheme.textPrimary,
+                                letterSpacing: -0.3,
+                              ),
+                              maxLines: 1,
+                              overflow: TextOverflow.ellipsis,
                             ),
-                          ),
-                          Text(
-                            'Service Marketplace',
-                            style: GoogleFonts.plusJakartaSans(
-                              fontSize: 11,
-                              color: AppTheme.textMuted,
-                              fontWeight: FontWeight.w500,
+                            Text(
+                              'Service Marketplace',
+                              style: GoogleFonts.plusJakartaSans(
+                                fontSize: 11,
+                                color: AppTheme.textMuted,
+                                fontWeight: FontWeight.w500,
+                              ),
+                              maxLines: 1,
+                              overflow: TextOverflow.ellipsis,
                             ),
-                          ),
-                        ],
+                          ],
+                        ),
                       ),
                     ],
                   ),
@@ -328,22 +334,25 @@ class _DashboardScreenState extends State<DashboardScreen> {
                 Padding(
                   padding:
                       const EdgeInsets.symmetric(horizontal: 16, vertical: 8),
-                  child: ListTile(
-                    shape: RoundedRectangleBorder(
-                      borderRadius:
-                          BorderRadius.circular(AppTheme.radiusMedium),
-                    ),
-                    leading: const Icon(Icons.notifications_none_rounded,
-                        color: AppTheme.forestSlate),
-                    title: Text(
-                      'Notifications',
-                      style: GoogleFonts.plusJakartaSans(
-                        fontSize: 14,
-                        fontWeight: FontWeight.w600,
-                        color: AppTheme.textPrimary,
+                  child: Material(
+                    color: Colors.transparent,
+                    child: ListTile(
+                      shape: RoundedRectangleBorder(
+                        borderRadius:
+                            BorderRadius.circular(AppTheme.radiusMedium),
                       ),
+                      leading: const Icon(Icons.notifications_none_rounded,
+                          color: AppTheme.forestSlate),
+                      title: Text(
+                        'Notifications',
+                        style: GoogleFonts.plusJakartaSans(
+                          fontSize: 14,
+                          fontWeight: FontWeight.w600,
+                          color: AppTheme.textPrimary,
+                        ),
+                      ),
+                      onTap: _openNotifications,
                     ),
-                    onTap: _openNotifications,
                   ),
                 ),
                 const SizedBox(height: 16),
@@ -394,13 +403,19 @@ class _DashboardScreenState extends State<DashboardScreen> {
                       isSelected ? AppTheme.pineGreen : AppTheme.textSecondary,
                 ),
                 const SizedBox(width: 14),
-                Text(
-                  label,
-                  style: GoogleFonts.plusJakartaSans(
-                    fontSize: 14,
-                    fontWeight: isSelected ? FontWeight.w700 : FontWeight.w500,
-                    color:
-                        isSelected ? AppTheme.pineGreen : AppTheme.textPrimary,
+                Expanded(
+                  child: Text(
+                    label,
+                    maxLines: 1,
+                    overflow: TextOverflow.ellipsis,
+                    style: GoogleFonts.plusJakartaSans(
+                      fontSize: 14,
+                      fontWeight:
+                          isSelected ? FontWeight.w700 : FontWeight.w500,
+                      color: isSelected
+                          ? AppTheme.pineGreen
+                          : AppTheme.textPrimary,
+                    ),
                   ),
                 ),
               ],

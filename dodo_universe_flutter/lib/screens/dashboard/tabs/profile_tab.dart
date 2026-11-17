@@ -361,29 +361,32 @@ class _ProfileTabState extends State<ProfileTab> {
     required String title,
     required List<Widget> children,
   }) {
-    return Container(
-      decoration: BoxDecoration(
-        color: AppTheme.surfaceWhite,
-        borderRadius: BorderRadius.circular(AppTheme.radiusLarge),
-        border: Border.all(color: AppTheme.borderSubtle),
-        boxShadow: AppTheme.softShadow,
-      ),
-      child: Column(
-        crossAxisAlignment: CrossAxisAlignment.start,
-        children: [
-          Padding(
-            padding: const EdgeInsets.only(left: 18, top: 16, bottom: 8),
-            child: Text(
-              title,
-              style: GoogleFonts.outfit(
-                fontSize: 15,
-                fontWeight: FontWeight.w700,
-                color: AppTheme.textPrimary,
+    return Material(
+      color: AppTheme.surfaceWhite,
+      borderRadius: BorderRadius.circular(AppTheme.radiusLarge),
+      child: Container(
+        decoration: BoxDecoration(
+          borderRadius: BorderRadius.circular(AppTheme.radiusLarge),
+          border: Border.all(color: AppTheme.borderSubtle),
+          boxShadow: AppTheme.softShadow,
+        ),
+        child: Column(
+          crossAxisAlignment: CrossAxisAlignment.start,
+          children: [
+            Padding(
+              padding: const EdgeInsets.only(left: 18, top: 16, bottom: 8),
+              child: Text(
+                title,
+                style: GoogleFonts.outfit(
+                  fontSize: 15,
+                  fontWeight: FontWeight.w700,
+                  color: AppTheme.textPrimary,
+                ),
               ),
             ),
-          ),
-          ...children,
-        ],
+            ...children,
+          ],
+        ),
       ),
     );
   }
@@ -395,33 +398,36 @@ class _ProfileTabState extends State<ProfileTab> {
     Widget? trailing,
     required VoidCallback onTap,
   }) {
-    return ListTile(
-      contentPadding: const EdgeInsets.symmetric(horizontal: 18, vertical: 4),
-      leading: Container(
-        padding: const EdgeInsets.all(8),
-        decoration: BoxDecoration(
-          color: AppTheme.surfaceMuted,
-          borderRadius: BorderRadius.circular(AppTheme.radiusSmall),
+    return Material(
+      color: Colors.transparent,
+      child: ListTile(
+        contentPadding: const EdgeInsets.symmetric(horizontal: 18, vertical: 4),
+        leading: Container(
+          padding: const EdgeInsets.all(8),
+          decoration: BoxDecoration(
+            color: AppTheme.surfaceMuted,
+            borderRadius: BorderRadius.circular(AppTheme.radiusSmall),
+          ),
+          child: Icon(icon, color: AppTheme.forestSlate, size: 20),
         ),
-        child: Icon(icon, color: AppTheme.forestSlate, size: 20),
-      ),
-      title: Text(
-        title,
-        style: GoogleFonts.plusJakartaSans(
-          fontSize: 14,
-          fontWeight: FontWeight.w600,
-          color: AppTheme.textPrimary,
+        title: Text(
+          title,
+          style: GoogleFonts.plusJakartaSans(
+            fontSize: 14,
+            fontWeight: FontWeight.w600,
+            color: AppTheme.textPrimary,
+          ),
         ),
-      ),
-      subtitle: Text(
-        subtitle,
-        style: GoogleFonts.plusJakartaSans(
-          fontSize: 12,
-          color: AppTheme.textMuted,
+        subtitle: Text(
+          subtitle,
+          style: GoogleFonts.plusJakartaSans(
+            fontSize: 12,
+            color: AppTheme.textMuted,
+          ),
         ),
+        trailing: trailing,
+        onTap: onTap,
       ),
-      trailing: trailing,
-      onTap: onTap,
     );
   }
 }

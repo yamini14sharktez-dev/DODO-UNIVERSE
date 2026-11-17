@@ -766,7 +766,7 @@ class _HomeTabState extends State<HomeTab> {
             crossAxisCount: crossAxisCount,
             crossAxisSpacing: 12,
             mainAxisSpacing: 12,
-            childAspectRatio: 1.15,
+            childAspectRatio: 0.95,
           ),
           itemBuilder: (context, index) {
             final cat = categories[index];
