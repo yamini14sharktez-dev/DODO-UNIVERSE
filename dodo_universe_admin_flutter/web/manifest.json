@@ -1,0 +1,11 @@
+{
+  "name": "DODO Universe Admin",
+  "short_name": "DODO Admin",
+  "start_url": ".",
+  "display": "standalone",
+  "background_color": "#F8F9FA",
+  "theme_color": "#2D6A4F",
+  "description": "DODO Universe Platform Administration",
+  "orientation": "portrait-primary",
+  "prefer_related_applications": false
+}
