@@ -4,6 +4,7 @@ import '../core/auth/auth_service.dart';
 import '../core/config/app_config.dart';
 import '../core/supabase/supabase_client.dart';
 import 'auth/auth_gate.dart';
+import 'dashboard/dashboard_screen.dart';
 
 class Phase0Screen extends StatefulWidget {
   final IAuthService? authService;
@@ -128,6 +129,32 @@ class _Phase0ScreenState extends State<Phase0Screen> {
             child: Column(
               crossAxisAlignment: CrossAxisAlignment.stretch,
               children: [
+                // Dashboard Navigation CTA
+                Padding(
+                  padding: const EdgeInsets.only(bottom: 16.0),
+                  child: ElevatedButton.icon(
+                    style: ElevatedButton.styleFrom(
+                      backgroundColor: Colors.black,
+                      foregroundColor: Colors.white,
+                      minimumSize: const Size(double.infinity, 50),
+                    ),
+                    icon: const Icon(Icons.dashboard_rounded),
+                    label: const Text(
+                      'Launch DODO Universe Dashboard',
+                      style:
+                          TextStyle(fontSize: 16, fontWeight: FontWeight.bold),
+                    ),
+                    onPressed: () {
+                      Navigator.push(
+                        context,
+                        MaterialPageRoute(
+                          builder: (context) =>
+                              DashboardScreen(authService: auth),
+                        ),
+                      );
+                    },
+                  ),
+                ),
                 // Environment Card
                 Card(
                   elevation: 2,
