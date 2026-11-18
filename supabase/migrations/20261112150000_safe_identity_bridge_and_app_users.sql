@@ -68,7 +68,11 @@ CREATE UNIQUE INDEX IF NOT EXISTS idx_app_users_email_unique
     WHERE email IS NOT NULL AND TRIM(email) != '';
 
 CREATE INDEX IF NOT EXISTS idx_app_users_created_at ON public.app_users (created_at DESC);
-
+-- Ensure origin exists and phone is nullable if table already existed
+ALTER TABLE public.app_users 
+    ADD COLUMN IF NOT EXISTS origin TEXT NOT NULL DEFAULT 'go_backend' 
+    CHECK (origin IN ('supabase_auth', 'go_backend'));
+ALTER TABLE public.app_users ALTER COLUMN phone DROP NOT NULL;
 -- -----------------------------------------------------------------------------
 -- Step 4: Seed / Backfill Existing Users (Strict Authenticity, Zero Invention)
 -- -----------------------------------------------------------------------------
@@ -128,6 +132,7 @@ SELECT
     a.created_at,
     a.updated_at
 FROM public.app_users a
+INNER JOIN auth.users u ON u.id = a.id
 ON CONFLICT (id) DO UPDATE SET
     full_name = EXCLUDED.full_name,
     is_registration_complete = EXCLUDED.is_registration_complete,
