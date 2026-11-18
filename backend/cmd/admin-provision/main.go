@@ -73,9 +73,12 @@ func main() {
 		existing.IsActive = true
 		existing.FullName = *nameFlag
 		existing.Phone = *phoneFlag
+		existing.FailedLoginAttempts = 0
+		existing.LockedUntil = nil
 		if err := store.Admin().UpdateAdmin(ctx, existing); err != nil {
 			log.Fatalf("Failed to update admin: %v", err)
 		}
+		_ = store.Admin().ResetAdminFailedLogins(ctx, existing.ID)
 		printSuccess("UPDATED EXISTING ADMIN", existing.Email, existing.Phone, password, string(role))
 		return
 	}

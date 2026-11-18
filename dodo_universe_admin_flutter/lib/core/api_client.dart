@@ -83,7 +83,15 @@ class AdminApiClient {
     String msg = 'Request failed (${res.statusCode})';
     try {
       final err = jsonDecode(res.body);
-      msg = err['message'] ?? err['error'] ?? msg;
+      if (err is Map<String, dynamic>) {
+        if (err['error'] is Map<String, dynamic> && err['error']['message'] != null) {
+          msg = err['error']['message'].toString();
+        } else if (err['message'] != null) {
+          msg = err['message'].toString();
+        } else if (err['error'] is String) {
+          msg = err['error'].toString();
+        }
+      }
     } catch (_) {}
     throw Exception(msg);
   }
