@@ -74,7 +74,11 @@ class AdminApiClient {
   dynamic _handleResponse(http.Response res) {
     if (res.statusCode >= 200 && res.statusCode < 300) {
       if (res.body.isEmpty) return {};
-      return jsonDecode(res.body);
+      final parsed = jsonDecode(res.body);
+      if (parsed is Map<String, dynamic> && parsed.containsKey('data') && parsed['data'] != null) {
+        return parsed['data'];
+      }
+      return parsed;
     }
     String msg = 'Request failed (${res.statusCode})';
     try {
@@ -86,13 +90,18 @@ class AdminApiClient {
 
   // Auth
   Future<AdminUser> login(String identifier, String password) async {
-    final data = await post('/auth/login', {
+    final res = await post('/auth/login', {
       'identifier': identifier,
       'password': password,
     });
-    accessToken = data['tokens']['access_token'];
-    refreshToken = data['tokens']['refresh_token'];
-    currentAdmin = AdminUser.fromJson(data['admin']);
+    final data = (res is Map<String, dynamic> && res.containsKey('data') && res['data'] is Map<String, dynamic>)
+        ? res['data'] as Map<String, dynamic>
+        : res as Map<String, dynamic>;
+
+    final tokens = data['tokens'] as Map<String, dynamic>? ?? {};
+    accessToken = tokens['access_token']?.toString();
+    refreshToken = tokens['refresh_token']?.toString();
+    currentAdmin = AdminUser.fromJson(data['admin'] as Map<String, dynamic>? ?? {});
     return currentAdmin!;
   }
 
